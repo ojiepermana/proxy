@@ -12,5 +12,6 @@ proxy-http.workspace = true
 proxy-security.workspace = true
 
 [dev-dependencies]
+serde_json.workspace = true
 tiny_http.workspace = true
 tokio = { workspace = true, features = ["net"] }

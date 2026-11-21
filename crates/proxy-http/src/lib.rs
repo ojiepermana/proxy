@@ -6,11 +6,13 @@ use std::time::Duration;
 use async_trait::async_trait;
 use pingora::{
     Error, ErrorType, Result,
+    http::{Method, ResponseHeader},
     prelude::HttpPeer,
     proxy::{ProxyHttp, Session},
 };
 use proxy_balancer::RoundRobinPool;
 use proxy_security::IpAccessPolicy;
+use serde_json::json;
 
 /// Handler Pingora yang berbagi satu pool untuk semua request.
 pub struct ReverseProxy {
@@ -48,6 +50,27 @@ impl ReverseProxy {
         self.ip_policy = policy;
         self
     }
+
+    async fn respond_status(&self, session: &mut Session) -> Result<()> {
+        let backends: Vec<_> = self
+            .backends
+            .backend_statuses()
+            .map(|(address, healthy)| json!({ "address": address, "healthy": healthy }))
+            .collect();
+        let body = json!({ "backends": backends }).to_string();
+        let mut header = ResponseHeader::build(200, Some(3))?;
+        header.insert_header("Content-Type", "application/json")?;
+        header.insert_header("Cache-Control", "no-store")?;
+        header.insert_header("Content-Length", body.len().to_string())?;
+        let head_only = session.req_header().method == Method::HEAD;
+        session
+            .write_response_header(Box::new(header), head_only)
+            .await?;
+        if !head_only {
+            session.write_response_body(Some(body.into()), true).await?;
+        }
+        Ok(())
+    }
 }
 
 #[async_trait]
@@ -63,12 +86,17 @@ impl ProxyHttp for ReverseProxy {
             .client_addr()
             .and_then(|addr| addr.as_inet())
             .map(SocketAddr::ip);
-        if self.ip_policy.allows(peer_ip) {
-            return Ok(false);
+        if !self.ip_policy.allows(peer_ip) {
+            session.respond_error(403).await?;
+            return Ok(true);
         }
 
-        session.respond_error(403).await?;
-        Ok(true)
+        let request = session.req_header();
+        if request.uri.path() == "/status" && matches!(request.method, Method::GET | Method::HEAD) {
+            self.respond_status(session).await?;
+            return Ok(true);
+        }
+        Ok(false)
     }
 
     async fn upstream_peer(

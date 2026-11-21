@@ -74,6 +74,22 @@ Interval, timeout, dan kedua ambang menerima bilangan bulat positif. Hasil yang 
 
 Jalankan `cargo test -p proxy --test http_health --locked` untuk mengulangi skenario ambang gagal dan sukses, respons `500`, dan timeout dengan dua backend lokal.
 
+### Melihat status tiap backend
+
+Kirim `GET /status` ke listener proxy. Respons JSON memuat setiap alamat sesuai urutan `--upstream`. Nilai `healthy` menunjukkan apakah backend bisa dipilih oleh round robin saat status dibaca.
+
+```sh
+curl -sS http://127.0.0.1:8080/status
+```
+
+Dalam contoh ini, baru backend pertama yang mencapai ambang sukses.
+
+```json
+{"backends":[{"address":"127.0.0.1:8000","healthy":true},{"address":"127.0.0.1:8001","healthy":false}]}
+```
+
+Proxy menjawab sendiri setelah memeriksa aturan IP. Membaca status tidak memicu probe atau mengambil giliran round robin. Klien yang diizinkan mendapat `200 OK` meskipun semua backend belum siap. Path `/status` juga mendukung `HEAD`. Metode lain mengikuti alur proxy biasa.
+
 ## Konfigurasi satu backend
 
 `cargo run --locked` menggunakan listener `127.0.0.1:8080` dan satu backend `127.0.0.1:8000`. Gunakan `--listen` dan `--upstream` untuk mengganti alamat IPv4 atau IPv6.

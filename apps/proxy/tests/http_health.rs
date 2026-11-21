@@ -117,11 +117,17 @@ impl Drop for Origin {
 }
 
 fn fetch(proxy: SocketAddr) -> (u16, String) {
+    get(proxy, "/who")
+}
+
+fn get(proxy: SocketAddr, path: &str) -> (u16, String) {
     let mut client = TcpStream::connect(proxy).unwrap();
     client.set_read_timeout(Some(TIMEOUT)).unwrap();
-    client
-        .write_all(b"GET /who HTTP/1.1\r\nHost: frontend.test\r\nConnection: close\r\n\r\n")
-        .unwrap();
+    write!(
+        client,
+        "GET {path} HTTP/1.1\r\nHost: frontend.test\r\nConnection: close\r\n\r\n"
+    )
+    .unwrap();
     let mut response = String::new();
     client.read_to_string(&mut response).unwrap();
     let (headers, body) = response.split_once("\r\n\r\n").unwrap();
@@ -277,6 +283,18 @@ fn starts_unhealthy_until_each_ready_endpoint_passes_twice() {
     let proxy = client.peer_addr().unwrap();
     let mut probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
     let mut probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
+    let assert_status = |a_healthy: bool, b_healthy: bool| {
+        let (code, body) = get(proxy, "/status");
+        assert_eq!(code, 200);
+        assert_eq!(
+            serde_json::from_str::<serde_json::Value>(&body).unwrap(),
+            serde_json::json!({"backends": [
+                {"address": a.addr(), "healthy": a_healthy},
+                {"address": b.addr(), "healthy": b_healthy}
+            ]})
+        );
+    };
+    assert_status(false, false);
     assert_eq!(fetch(proxy).0, 502);
 
     for (status_a, status_b, expected) in [
@@ -286,11 +304,16 @@ fn starts_unhealthy_until_each_ready_endpoint_passes_twice() {
         (200, 200, "AAAA"),
         (200, 200, "BABA"),
         (500, 500, "BABA"), // Setelah masuk, ambang gagal biasa berlaku.
+        (500, 200, "BABA"),
+        (500, 200, "BBBB"),
+        (200, 200, "BBBB"),
+        (200, 200, "ABAB"),
     ] {
         probe_a.respond(Response::empty(status_a)).unwrap();
         probe_b.respond(Response::empty(status_b)).unwrap();
         probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
         probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
+        assert_status(expected.contains('A'), expected.contains('B'));
         if expected.is_empty() {
             assert_eq!(fetch(proxy).0, 502);
             assert_eq!(a.traffic.load(Ordering::Relaxed), 0);
@@ -301,6 +324,15 @@ fn starts_unhealthy_until_each_ready_endpoint_passes_twice() {
             }
         }
     }
+}
+
+#[test]
+fn denies_status_to_a_blocked_client() {
+    let a = Origin::new("A", "/ready", 200);
+    let (_proxy, client) = start_proxy(&[a.addr()], &["--deny-ip", "127.0.0.1"]);
+    let (code, body) = get(client.peer_addr().unwrap(), "/status");
+    assert_eq!(code, 403);
+    assert!(!body.contains(&a.addr().to_string()));
 }
 
 #[test]

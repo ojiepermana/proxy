@@ -77,6 +77,14 @@ impl RoundRobinPool {
         checks
     }
 
+    /// Alamat dan kesiapan tiap backend sesuai urutan konfigurasi, tanpa mengambil giliran.
+    pub fn backend_statuses(&self) -> impl Iterator<Item = (SocketAddr, bool)> + '_ {
+        self.targets.iter().map(|target| {
+            let address = *target.addr.as_inet().expect("target berupa alamat IP");
+            (address, self.view.ready(target))
+        })
+    }
+
     pub fn select(&self) -> Option<SocketAddr> {
         self.select_excluding(&[])
     }

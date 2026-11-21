@@ -5,7 +5,7 @@ use clap::Parser;
 use pingora::{
     proxy::http_proxy_service, server::Server, services::background::background_service,
 };
-use proxy_balancer::RoundRobinPool;
+use proxy_balancer::{HealthCheckMode, RoundRobinPool};
 use proxy_http::ReverseProxy;
 use proxy_security::IpAccessPolicy;
 
@@ -26,6 +26,10 @@ struct Args {
         default_value = "127.0.0.1:8000"
     )]
     upstreams: Vec<SocketAddr>,
+
+    /// Periksa port TCP atau kirim GET /health ke tiap backend (HTTP 200 berarti sehat).
+    #[arg(long, value_name = "tcp|http", default_value = "tcp")]
+    health_check: HealthCheckMode,
 
     /// Izinkan IP ini. Jika diisi, hanya IP dalam allowlist yang boleh lewat. Bisa diulang.
     #[arg(long, value_name = "IP")]
@@ -66,8 +70,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .split_first()
         .ok_or("Diperlukan minimal satu backend.")?;
     let policy = IpAccessPolicy::new(args.allow_ip, args.deny_ip);
-    let pool = RoundRobinPool::new(first, remaining);
-    let checks = background_service("Health check TCP", pool.health_checks());
+    let pool = RoundRobinPool::with_health_check(first, remaining, args.health_check);
+    let checks = background_service("Health check backend", pool.health_checks());
     let proxy = ReverseProxy::from_pool(pool).with_ip_policy(policy);
     let mut server = Server::new(None)?;
     server.bootstrap();

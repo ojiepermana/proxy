@@ -1,14 +1,14 @@
 //! Pemilihan backend sehat secara round robin sesuai urutan konfigurasi.
 
+mod health;
+pub use health::HealthCheckMode;
+
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use futures::FutureExt;
-use pingora::lb::{
-    Backend, Backends, HealthCheckService, HealthRegistry, discovery::Static,
-    health_check::TcpHealthCheck,
-};
+use pingora::lb::{Backend, Backends, HealthCheckService, HealthRegistry, discovery::Static};
 
 /// Urutan konfigurasi dan kesehatan backend yang dipakai bersama oleh semua request.
 pub struct RoundRobinPool {
@@ -20,6 +20,14 @@ pub struct RoundRobinPool {
 
 impl RoundRobinPool {
     pub fn new(first: SocketAddr, remaining: &[SocketAddr]) -> Self {
+        Self::with_health_check(first, remaining, HealthCheckMode::Tcp)
+    }
+
+    pub fn with_health_check(
+        first: SocketAddr,
+        remaining: &[SocketAddr],
+        mode: HealthCheckMode,
+    ) -> Self {
         let targets: Box<[_]> = std::iter::once(first)
             .chain(remaining.iter().copied())
             .map(|addr| Backend {
@@ -29,7 +37,7 @@ impl RoundRobinPool {
             })
             .collect();
         let registry = Arc::new(HealthRegistry::new());
-        registry.set_health_check(TcpHealthCheck::new());
+        registry.set_health_check(mode.build(&targets));
         let discovery = Static::new(targets.iter().cloned().collect());
         let view = Backends::new_with_health_registry(discovery, Arc::clone(&registry));
         // Discovery statis hanya menyalin alamat dari memori, sebelum server dimulai.

@@ -1,0 +1,15 @@
+[package]
+name = "proxy"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+clap.workspace = true
+pingora = { workspace = true, features = ["proxy"] }
+proxy-balancer.workspace = true
+proxy-http.workspace = true
+proxy-security.workspace = true
+
+[dev-dependencies]
+tiny_http.workspace = true

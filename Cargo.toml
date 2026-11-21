@@ -1,0 +1,25 @@
+[workspace]
+members = [
+    "apps/proxy",
+    "crates/proxy-http",
+    "crates/proxy-balancer",
+    "crates/proxy-security",
+]
+default-members = ["apps/proxy"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[workspace.dependencies]
+async-trait = "0.1"
+clap = { version = "4", features = ["derive"] }
+futures = "0.3"
+pingora = { version = "0.9", default-features = false }
+proxy-http = { path = "crates/proxy-http" }
+proxy-balancer = { path = "crates/proxy-balancer" }
+proxy-security = { path = "crates/proxy-security" }
+tiny_http = "0.12"
+tokio = "1"

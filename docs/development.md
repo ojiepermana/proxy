@@ -1,0 +1,34 @@
+# Pengembangan
+
+## Menulis kode Rust
+
+Ikuti format `rustfmt`. Gunakan `snake_case` untuk modul dan fungsi, serta `UpperCamelCase` untuk tipe. Pertahankan item tetap privat selama hanya digunakan dalam modulnya. Gunakan `pub(crate)` ketika modul lain dalam crate membutuhkannya dan `pub` untuk kontrak antar-crate.
+
+Gunakan `Result` untuk kegagalan yang perlu ditangani pemanggil. Terjemahkan keputusan kebijakan dan kegagalan menjadi respons pada lapisan HTTP yang memiliki konteks request.
+
+## Menempatkan tes
+
+Tempatkan unit test di modul pemilik dalam `#[cfg(test)] mod tests`. Letakkan integration test yang menggunakan API publik atau binary di direktori `tests/` milik package terkait.
+
+| Perubahan | Perilaku yang diuji | Pemeriksaan terfokus |
+|---|---|---|
+| Listener dan forwarding | Binary meneruskan metode, path, query, header, dan body ke backend HTTP lokal. Respons sukses dan backend offline diuji lewat jaringan loopback. | `cargo test -p proxy --test forwarding --locked` |
+| Round robin | Dua backend lokal menerima sepuluh request bergantian pada satu koneksi klien. Periksa identitas backend di setiap respons. | `cargo test -p proxy --test forwarding --locked alternates_backends` |
+| Aturan IP | Periksa allowlist, denylist, prioritas deny, alamat IPv4-mapped IPv6, dan peer tanpa IP. | `cargo test -p proxy-security --locked` |
+| Health check | Periksa hasil probe TCP untuk pool yang sebagian atau seluruhnya offline. Uji binary dengan menghentikan backend lalu menyalakannya lagi di port yang sama dan periksa urutan respons. | `cargo test -p proxy-balancer --locked` dan `cargo test -p proxy --test forwarding --locked routes_to_survivor` |
+| Penolakan request HTTP | Klien yang diblokir mendapat 403, backend tidak menerima request tersebut, dan POST yang diizinkan mencapai backend. | `cargo test -p proxy --test forwarding --locked` |
+
+## Memeriksa perubahan
+
+Jalankan perintah berikut dari root sebelum menyelesaikan perubahan kode atau manifest. Opsi `--workspace` mencakup semua package karena target default dari root adalah binary.
+
+```sh
+cargo fmt --all --check
+cargo clippy --workspace --all-targets --locked -- -D warnings
+cargo build --workspace --locked
+cargo test --workspace --locked
+```
+
+Setelah mengubah anggota workspace atau dependensi internal, periksa daftar package dan dependensi langsung dengan `cargo metadata --no-deps --format-version 1 --locked`. Jika dependensi berubah, perbarui lockfile melalui Cargo sebelum menjalankan pemeriksaan terkunci. Setelah mengubah startup, jalankan `cargo run --locked` dan amati keluaran serta status keluar binary.
+
+Untuk perubahan dokumentasi, periksa tujuan tautan relatif dan cocokkan contoh perintah dengan package yang disebutkan. Jika menambahkan aturan, letakkan di dokumen yang menjelaskan keputusan tersebut dan tautkan dari panduan agen bila diperlukan.

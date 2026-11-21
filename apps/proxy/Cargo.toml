@@ -13,3 +13,4 @@ proxy-security.workspace = true
 
 [dev-dependencies]
 tiny_http.workspace = true
+tokio = { workspace = true, features = ["net"] }

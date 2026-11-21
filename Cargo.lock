@@ -1253,6 +1253,7 @@ dependencies = [
  "proxy-http",
  "proxy-security",
  "tiny_http",
+ "tokio",
 ]
 
 [[package]]

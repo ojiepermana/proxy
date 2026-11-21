@@ -1,7 +1,8 @@
-use std::net::{SocketAddr, TcpListener, TcpStream};
+use std::net::{Ipv4Addr, SocketAddr, TcpStream};
 use std::process::{Child, Command};
 use std::thread;
 use std::time::{Duration, Instant};
+use tokio::net::TcpSocket;
 
 pub(super) const TIMEOUT: Duration = Duration::from_secs(5);
 
@@ -15,10 +16,12 @@ impl Drop for Proxy {
 }
 
 pub(super) fn start_proxy(upstreams: &[SocketAddr], options: &[&str]) -> (Proxy, TcpStream) {
-    let listen = TcpListener::bind("127.0.0.1:0")
-        .unwrap()
-        .local_addr()
-        .unwrap();
+    let listen = {
+        // Hanya proses proxy yang boleh menerima koneksi penanda siap.
+        let socket = TcpSocket::new_v4().unwrap();
+        socket.bind((Ipv4Addr::LOCALHOST, 0).into()).unwrap();
+        socket.local_addr().unwrap()
+    };
     let mut command = Command::new(env!("CARGO_BIN_EXE_proxy"));
     command
         .arg("--listen")

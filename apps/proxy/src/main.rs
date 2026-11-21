@@ -48,9 +48,13 @@ struct Args {
     #[arg(long, value_name = "N")]
     health_check_failure_threshold: Option<NonZeroUsize>,
 
-    /// Jumlah probe HTTP sukses berturut-turut agar backend kembali ke rotasi (bawaan 1).
+    /// Jumlah probe HTTP sukses berturut-turut agar backend masuk rotasi (bawaan 1).
     #[arg(long, value_name = "N")]
     health_check_success_threshold: Option<NonZeroUsize>,
+
+    /// Mulai dengan semua backend di luar rotasi hingga ambang sukses HTTP tercapai.
+    #[arg(long)]
+    health_check_start_unhealthy: bool,
 
     /// Izinkan IP ini. Jika diisi, hanya IP dalam allowlist yang boleh lewat. Bisa diulang.
     #[arg(long, value_name = "IP")]
@@ -101,6 +105,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             timeout_ms: args.health_check_timeout_ms,
             failure_threshold: args.health_check_failure_threshold,
             success_threshold: args.health_check_success_threshold,
+            start_unhealthy: args.health_check_start_unhealthy,
         },
     )?;
     let checks = background_service("Health check backend", pool.health_checks());
@@ -110,7 +115,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut service = http_proxy_service(&server.configuration, proxy);
     service.add_tcp(&args.listen.to_string());
     let health = server.add_service(checks);
-    server.add_service(service).add_dependency(&health);
+    let listener = server.add_service(service);
+    if !args.health_check_start_unhealthy {
+        listener.add_dependency(&health);
+    }
     eprintln!(
         "Memulai proxy HTTP di {} menuju {:?} (round robin)",
         args.listen, args.upstreams

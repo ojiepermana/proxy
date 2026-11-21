@@ -13,7 +13,7 @@ use pingora::lb::{Backend, Backends, HealthCheckService, HealthRegistry, discove
 /// Urutan konfigurasi dan kesehatan backend yang dipakai bersama oleh semua request.
 pub struct RoundRobinPool {
     targets: Box<[Backend]>,
-    view: Backends,
+    view: Arc<Backends>,
     registry: Arc<HealthRegistry>,
     health_check_interval: Duration,
     next: Mutex<usize>,
@@ -48,14 +48,17 @@ impl RoundRobinPool {
             })
             .collect();
         let registry = Arc::new(HealthRegistry::new());
-        registry.set_health_check(mode.build(&targets, &options)?);
         let discovery = Static::new(targets.iter().cloned().collect());
-        let view = Backends::new_with_health_registry(discovery, Arc::clone(&registry));
+        let view = Arc::new(Backends::new_with_health_registry(
+            discovery,
+            Arc::clone(&registry),
+        ));
         // Discovery statis hanya menyalin alamat dari memori, sebelum server dimulai.
         view.update(|_| {})
             .now_or_never()
             .expect("discovery statis selesai tanpa I/O")
             .expect("alamat backend statis sudah valid");
+        registry.set_health_check(mode.build(&view, &options)?);
         Ok(Self {
             targets,
             view,

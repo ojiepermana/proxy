@@ -253,6 +253,57 @@ fn applies_consecutive_thresholds_to_ready_probes() {
 }
 
 #[test]
+fn starts_unhealthy_until_each_ready_endpoint_passes_twice() {
+    let a = Origin::new("A", "/ready", 200);
+    let b = Origin::new("B", "/ready", 200);
+    let pending_a = a.hold_health();
+    let pending_b = b.hold_health();
+    let options = [
+        "--health-check",
+        "http",
+        "--health-check-path",
+        "/ready",
+        "--health-check-start-unhealthy",
+        "--health-check-success-threshold",
+        "2",
+        "--health-check-failure-threshold",
+        "3",
+        "--health-check-interval-ms",
+        "25",
+        "--health-check-timeout-ms",
+        "10000",
+    ];
+    let (_proxy, client) = start_proxy(&[a.addr(), b.addr()], &options);
+    let proxy = client.peer_addr().unwrap();
+    let mut probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
+    let mut probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
+    assert_eq!(fetch(proxy).0, 502);
+
+    for (status_a, status_b, expected) in [
+        (200, 500, ""),
+        (500, 200, ""),
+        (200, 500, ""), // Kegagalan memutus rentetan sukses masing-masing backend.
+        (200, 200, "AAAA"),
+        (200, 200, "BABA"),
+        (500, 500, "BABA"), // Setelah masuk, ambang gagal biasa berlaku.
+    ] {
+        probe_a.respond(Response::empty(status_a)).unwrap();
+        probe_b.respond(Response::empty(status_b)).unwrap();
+        probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
+        probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
+        if expected.is_empty() {
+            assert_eq!(fetch(proxy).0, 502);
+            assert_eq!(a.traffic.load(Ordering::Relaxed), 0);
+            assert_eq!(b.traffic.load(Ordering::Relaxed), 0);
+        } else {
+            for marker in expected.chars() {
+                assert_eq!(fetch(proxy), (200, marker.to_string()));
+            }
+        }
+    }
+}
+
+#[test]
 fn accepts_ready_response_within_extended_timeout() {
     let a = Origin::new("A", "/ready", 200);
     let pending = a.hold_health();

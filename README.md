@@ -51,10 +51,11 @@ cargo run --locked -- --health-check http \
 
 Proxy mengirim `GET` langsung ke setiap backend dengan header `Host` berisi alamat dan port tujuan. Probe sukses jika respons `200 OK` selesai diterima dalam batas waktu. Timeout, kegagalan koneksi, dan respons selain `200` dihitung sebagai probe gagal. Jika semua backend keluar dari rotasi, klien mendapat `502 Bad Gateway`.
 
-Contoh berikut memeriksa `/ready` dengan jeda 100 ms dan batas waktu 150 ms. Backend keluar dari rotasi pada kegagalan ketiga berturut-turut dan kembali pada keberhasilan kedua berturut-turut.
+Contoh berikut memeriksa `/ready` dengan jeda 100 ms dan batas waktu 150 ms. Proxy langsung menerima request dan memberi `502` selama semua backend belum siap. Setiap backend mulai menerima trafik setelah dua probe sukses berturut-turut. Setelah masuk rotasi, backend keluar pada kegagalan ketiga berturut-turut dan kembali setelah dua keberhasilan berturut-turut.
 
 ```sh
 cargo run --locked -- --health-check http --health-check-path /ready \
+  --health-check-start-unhealthy \
   --health-check-interval-ms 100 --health-check-timeout-ms 150 \
   --health-check-failure-threshold 3 --health-check-success-threshold 2 \
   --upstream 127.0.0.1:8000 --upstream 127.0.0.1:8001
@@ -66,9 +67,10 @@ cargo run --locked -- --health-check http --health-check-path /ready \
 | `--health-check-interval-ms` | `1000` | Jeda dari selesainya satu putaran probe paralel hingga awal putaran berikutnya. |
 | `--health-check-timeout-ms` | `2000` | Batas total satu probe, termasuk koneksi dan pembacaan seluruh respons. Jika opsi ini diisi, batas koneksi dan baca juga mengikuti nilai tersebut. Tanpa opsi ini, batas koneksi dan baca masing-masing satu detik. |
 | `--health-check-failure-threshold` | `1` | Jumlah probe gagal berturut-turut pada satu backend agar backend keluar dari rotasi. |
-| `--health-check-success-threshold` | `1` | Jumlah probe sukses berturut-turut pada satu backend agar backend kembali ke rotasi. |
+| `--health-check-success-threshold` | `1` | Jumlah probe sukses berturut-turut pada satu backend agar backend yang tidak sehat masuk rotasi. |
+| `--health-check-start-unhealthy` | Nonaktif | Mulai dengan semua backend di luar rotasi. Listener dapat menjawab `502` sejak probe pertama masih berlangsung. |
 
-Interval, timeout, dan kedua ambang menerima bilangan bulat positif. Hasil yang berlawanan memutus rentetan pada backend tersebut. Saat startup, backend mulai dalam rotasi dan listener menunggu putaran probe pertama selesai. Dengan ambang gagal tiga, backend yang gagal pada putaran pertama masih dapat dipilih. Probe terus berjalan setelah backend keluar agar round robin dapat pulih tanpa restart.
+Interval, timeout, dan kedua ambang menerima bilangan bulat positif. Hasil yang berlawanan memutus rentetan pada backend tersebut. Dalam konfigurasi bawaan, backend mulai dalam rotasi dan listener menunggu putaran probe pertama selesai. Probe terus berjalan setelah backend keluar agar round robin dapat pulih tanpa restart.
 
 Jalankan `cargo test -p proxy --test http_health --locked` untuk mengulangi skenario ambang gagal dan sukses, respons `500`, dan timeout dengan dua backend lokal.
 

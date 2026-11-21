@@ -12,7 +12,7 @@ Workspace menghasilkan satu binary. Tempatkan perubahan di crate yang memiliki k
 ## Menempatkan perubahan
 
 - **Aturan IP** berada di `proxy-security`. Gunakan IP peer dari koneksi TCP. Jika IP peer tidak tersedia saat ada aturan aktif, tolak request.
-- **Health check backend** berada di `proxy-balancer`. Modul `health` menyiapkan probe TCP atau HTTP sesuai opsi `--health-check`. Untuk HTTP, tiap backend memiliki probe `GET /health` dengan header `Host` sesuai alamatnya. Pool dan `HealthCheckService` berbagi satu `HealthRegistry`. Layanan tetap memeriksa backend yang sedang gagal agar pool dapat memilihnya kembali setelah pulih.
+- **Health check backend** berada di `proxy-balancer`. Binary meneruskan pengaturan CLI sebagai `HttpHealthOptions`. Modul `health` menerapkan path dan timeout pada probe GET tiap backend dengan header `Host` sesuai alamatnya. `RoundRobinPool` mengatur interval pada `HealthCheckService`. Pool dan layanan berbagi satu `HealthRegistry`, sehingga hasil probe menentukan backend yang dapat dipilih, termasuk setelah pulih.
 - **Respons HTTP untuk akses yang ditolak** berada di `proxy-http`. Evaluasi kebijakan dalam `request_filter` dan akhiri request yang ditolak dengan HTTP 403 sebelum mengambil giliran dari `proxy-balancer`.
 
 ## Mengembangkan struktur

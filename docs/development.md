@@ -17,6 +17,7 @@ Tempatkan unit test di modul pemilik dalam `#[cfg(test)] mod tests`. Letakkan in
 | Aturan IP | Periksa allowlist, denylist, prioritas deny, alamat IPv4-mapped IPv6, dan peer tanpa IP. | `cargo test -p proxy-security --locked` |
 | Health check TCP | Periksa hasil probe TCP untuk pool yang sebagian atau seluruhnya offline. Uji binary dengan menghentikan backend lalu menyalakannya lagi di port yang sama dan periksa urutan respons. | `cargo test -p proxy-balancer --locked` dan `cargo test -p proxy --test forwarding --locked routes_to_survivor` |
 | Health check HTTP | Biarkan kedua backend menyala. Ubah status `/health` salah satunya dari 200 ke 500 lalu kembali ke 200. Tunggu hasil probe, periksa urutan respons klien, dan hitung request aplikasi yang diterima tiap backend. Uji juga respons 502 ketika semua probe gagal sejak startup. | `cargo test -p proxy --test http_health --locked` |
+| Timeout HTTP | Jalankan binary dengan path `/ready`, interval, dan timeout eksplisit. Tahan respons probe satu backend sambil tetap melayani request aplikasi. Periksa backend itu keluar dari rotasi dan kembali setelah probe mendapat 200 tepat waktu. Uji juga bahwa timeout yang diperpanjang mengizinkan respons lambat. | `cargo test -p proxy --test http_health --locked ready` |
 | Penolakan request HTTP | Klien yang diblokir mendapat 403, backend tidak menerima request tersebut, dan POST yang diizinkan mencapai backend. | `cargo test -p proxy --test forwarding --locked` |
 
 ## Memeriksa perubahan

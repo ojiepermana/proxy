@@ -3,28 +3,33 @@ mod support;
 use std::io::{Read, Write};
 use std::net::{SocketAddr, TcpStream};
 use std::sync::{
-    Arc,
-    atomic::{AtomicU16, AtomicUsize, Ordering},
+    Arc, Mutex,
+    atomic::{AtomicUsize, Ordering},
     mpsc,
 };
 use std::thread;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use support::{TIMEOUT, start_proxy};
-use tiny_http::{Method, Response, Server};
+use tiny_http::{Method, Request, Response, Server};
+
+enum HealthReply {
+    Status(u16),
+    Hold(mpsc::Sender<Request>),
+}
 
 struct Origin {
     server: Arc<Server>,
-    health: Arc<AtomicU16>,
+    health: Arc<Mutex<HealthReply>>,
     traffic: Arc<AtomicUsize>,
     probes: mpsc::Receiver<u16>,
     worker: Option<thread::JoinHandle<()>>,
 }
 
 impl Origin {
-    fn new(marker: &'static str, initial_status: u16) -> Self {
+    fn new(marker: &'static str, health_path: &'static str, initial_status: u16) -> Self {
         let server = Arc::new(Server::http("127.0.0.1:0").unwrap());
-        let health = Arc::new(AtomicU16::new(initial_status));
+        let health = Arc::new(Mutex::new(HealthReply::Status(initial_status)));
         let traffic = Arc::new(AtomicUsize::new(0));
         let (observed, probes) = mpsc::channel();
         let worker = {
@@ -35,19 +40,25 @@ impl Origin {
                 let host = server.server_addr().to_string();
                 while let Ok(request) = server.recv() {
                     match request.url() {
-                        "/health" => {
+                        path if path == health_path => {
                             let valid = request.method() == &Method::Get
                                 && request
                                     .headers()
                                     .iter()
                                     .any(|h| h.field.equiv("Host") && h.value.as_str() == host);
-                            let status = if valid {
-                                health.load(Ordering::Relaxed)
-                            } else {
-                                400
-                            };
-                            request.respond(Response::empty(status)).unwrap();
-                            observed.send(status).unwrap();
+                            if !valid {
+                                request.respond(Response::empty(400)).unwrap();
+                                continue;
+                            }
+                            match &*health.lock().unwrap() {
+                                HealthReply::Status(status) => {
+                                    request.respond(Response::empty(*status)).unwrap();
+                                    observed.send(*status).unwrap();
+                                }
+                                HealthReply::Hold(held) => {
+                                    let _ = held.send(request);
+                                }
+                            }
                         }
                         "/who" => {
                             traffic.fetch_add(1, Ordering::Relaxed);
@@ -72,7 +83,11 @@ impl Origin {
     }
 
     fn set_health_and_wait(&self, status: u16) {
-        self.health.store(status, Ordering::Relaxed);
+        {
+            let mut reply = self.health.lock().unwrap();
+            while self.probes.try_recv().is_ok() {}
+            *reply = HealthReply::Status(status);
+        }
         let deadline = Instant::now() + TIMEOUT;
         // Ketika probe kedua tiba, Pingora sudah menerapkan hasil probe pertama.
         let mut matching = 0;
@@ -85,6 +100,12 @@ impl Origin {
                 matching += 1;
             }
         }
+    }
+
+    fn hold_health(&self) -> mpsc::Receiver<Request> {
+        let (held, pending) = mpsc::channel();
+        *self.health.lock().unwrap() = HealthReply::Hold(held);
+        pending
     }
 }
 
@@ -110,8 +131,8 @@ fn fetch(proxy: SocketAddr) -> (u16, String) {
 
 #[test]
 fn excludes_http_500_and_rejoins_after_http_200() {
-    let a = Origin::new("A", 200);
-    let b = Origin::new("B", 200);
+    let a = Origin::new("A", "/health", 200);
+    let b = Origin::new("B", "/health", 200);
     let (_proxy, client) = start_proxy(&[a.addr(), b.addr()], &["--health-check", "http"]);
     let proxy = client.peer_addr().unwrap();
     drop(client);
@@ -136,10 +157,68 @@ fn excludes_http_500_and_rejoins_after_http_200() {
 
 #[test]
 fn returns_502_when_neither_health_endpoint_returns_200_at_startup() {
-    let a = Origin::new("A", 500);
-    let b = Origin::new("B", 204);
+    let a = Origin::new("A", "/health", 500);
+    let b = Origin::new("B", "/health", 204);
     let (_proxy, client) = start_proxy(&[a.addr(), b.addr()], &["--health-check", "http"]);
     assert_eq!(fetch(client.peer_addr().unwrap()).0, 502);
     assert_eq!(a.traffic.load(Ordering::Relaxed), 0);
     assert_eq!(b.traffic.load(Ordering::Relaxed), 0);
+}
+
+#[test]
+fn excludes_timed_out_ready_endpoint_and_rejoins_after_recovery() {
+    let a = Origin::new("A", "/ready", 200);
+    let b = Origin::new("B", "/ready", 200);
+    let options = [
+        "--health-check",
+        "http",
+        "--health-check-path",
+        "/ready",
+        "--health-check-interval-ms",
+        "100",
+        "--health-check-timeout-ms",
+        "150",
+    ];
+    let (_proxy, client) = start_proxy(&[a.addr(), b.addr()], &options);
+    let proxy = client.peer_addr().unwrap();
+    for expected in ["A", "B", "A", "B"] {
+        assert_eq!(fetch(proxy), (200, expected.into()));
+    }
+
+    let pending = b.hold_health();
+    let first = pending.recv_timeout(TIMEOUT).unwrap();
+    // Probe berikutnya hanya dapat tiba setelah timeout dan jeda antarputaran.
+    let _next = pending.recv_timeout(Duration::from_millis(900)).unwrap();
+    for _ in 0..12 {
+        assert_eq!(fetch(proxy), (200, "A".into()));
+    }
+    assert_eq!(b.traffic.load(Ordering::Relaxed), 2);
+    let _ = first.respond(Response::empty(200));
+    b.set_health_and_wait(200);
+    for expected in ["B", "A", "B", "A", "B", "A"] {
+        assert_eq!(fetch(proxy), (200, expected.into()));
+    }
+}
+
+#[test]
+fn accepts_ready_response_within_extended_timeout() {
+    let a = Origin::new("A", "/ready", 200);
+    let pending = a.hold_health();
+    let delayed = thread::spawn(move || {
+        let request = pending.recv_timeout(TIMEOUT).unwrap();
+        // Lebih lama dari batas baca bawaan Pingora yang sebesar satu detik.
+        thread::sleep(Duration::from_millis(1200));
+        let _ = request.respond(Response::empty(200));
+    });
+    let options = [
+        "--health-check",
+        "http",
+        "--health-check-path",
+        "/ready",
+        "--health-check-timeout-ms",
+        "3000",
+    ];
+    let (_proxy, client) = start_proxy(&[a.addr()], &options);
+    assert_eq!(fetch(client.peer_addr().unwrap()), (200, "A".into()));
+    delayed.join().unwrap();
 }

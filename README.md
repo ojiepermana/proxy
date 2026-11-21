@@ -49,9 +49,23 @@ cargo run --locked -- --health-check http \
   --upstream 127.0.0.1:8000 --upstream 127.0.0.1:8001
 ```
 
-Proxy mengirim `GET /health` langsung ke setiap backend dengan header `Host` berisi alamat dan port tujuan. Hanya respons `200 OK` yang menandakan backend sehat. Respons `500`, status lain, atau probe yang gagal atau melebihi dua detik mengeluarkan backend dari rotasi. Request berikutnya menuju backend sehat. Jika semuanya gagal, klien mendapat `502 Bad Gateway`.
+Proxy mengirim `GET` langsung ke setiap backend dengan header `Host` berisi alamat dan port tujuan. Backend tetap dalam rotasi jika probe selesai dengan `200 OK` dalam batas waktu. Satu timeout, kegagalan koneksi, atau respons selain `200` mengeluarkan backend dari rotasi. Jika semua backend gagal, klien mendapat `502 Bad Gateway`.
 
-Probe tetap berjalan selama backend berada di luar rotasi. Setelah satu probe mendapat `200 OK` dan selesai, backend kembali melayani request secara round robin tanpa restart. Untuk mengulangi skenario `200 → 500 → 200` dengan dua backend lokal, jalankan `cargo test -p proxy --test http_health --locked`.
+Untuk backend yang menyediakan `/ready`, contoh berikut memakai jeda 100 ms dan batas waktu 150 ms.
+
+```sh
+cargo run --locked -- --health-check http --health-check-path /ready \
+  --health-check-interval-ms 100 --health-check-timeout-ms 150 \
+  --upstream 127.0.0.1:8000 --upstream 127.0.0.1:8001
+```
+
+| Opsi untuk `--health-check http` | Bawaan | Arti |
+|---|---|---|
+| `--health-check-path` | `/health` | Path tujuan GET pada tiap backend. Awali dengan `/`. |
+| `--health-check-interval-ms` | `1000` | Jeda dari selesainya satu putaran probe paralel hingga awal putaran berikutnya. |
+| `--health-check-timeout-ms` | `2000` | Batas total satu probe, termasuk koneksi dan pembacaan seluruh respons. Jika opsi ini diisi, batas koneksi dan baca juga mengikuti nilai tersebut. Tanpa opsi ini, batas koneksi dan baca masing-masing satu detik. |
+
+Interval dan timeout menerima bilangan bulat positif dalam milidetik. Probe tetap berjalan selama backend berada di luar rotasi. Setelah satu probe berhasil, backend kembali melayani request secara round robin tanpa restart. Jalankan `cargo test -p proxy --test http_health --locked` untuk mengulangi skenario respons `500` dan timeout dengan dua backend lokal.
 
 ## Konfigurasi satu backend
 

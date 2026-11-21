@@ -1,7 +1,7 @@
 //! Pemilihan backend sehat secara round robin sesuai urutan konfigurasi.
 
 mod health;
-pub use health::HealthCheckMode;
+pub use health::{HealthCheckMode, HttpHealthOptions};
 
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
@@ -15,6 +15,7 @@ pub struct RoundRobinPool {
     targets: Box<[Backend]>,
     view: Backends,
     registry: Arc<HealthRegistry>,
+    health_check_interval: Duration,
     next: Mutex<usize>,
 }
 
@@ -28,6 +29,16 @@ impl RoundRobinPool {
         remaining: &[SocketAddr],
         mode: HealthCheckMode,
     ) -> Self {
+        Self::with_health_check_options(first, remaining, mode, HttpHealthOptions::default())
+            .expect("konfigurasi health check bawaan valid")
+    }
+
+    pub fn with_health_check_options(
+        first: SocketAddr,
+        remaining: &[SocketAddr],
+        mode: HealthCheckMode,
+        options: HttpHealthOptions,
+    ) -> pingora::Result<Self> {
         let targets: Box<[_]> = std::iter::once(first)
             .chain(remaining.iter().copied())
             .map(|addr| Backend {
@@ -37,7 +48,7 @@ impl RoundRobinPool {
             })
             .collect();
         let registry = Arc::new(HealthRegistry::new());
-        registry.set_health_check(mode.build(&targets));
+        registry.set_health_check(mode.build(&targets, &options)?);
         let discovery = Static::new(targets.iter().cloned().collect());
         let view = Backends::new_with_health_registry(discovery, Arc::clone(&registry));
         // Discovery statis hanya menyalin alamat dari memori, sebelum server dimulai.
@@ -45,17 +56,20 @@ impl RoundRobinPool {
             .now_or_never()
             .expect("discovery statis selesai tanpa I/O")
             .expect("alamat backend statis sudah valid");
-        Self {
+        Ok(Self {
             targets,
             view,
             registry,
+            health_check_interval: Duration::from_millis(
+                options.interval_ms.map_or(1000, |ms| ms.get().into()),
+            ),
             next: Mutex::new(0),
-        }
+        })
     }
 
     pub fn health_checks(&self) -> HealthCheckService {
         let mut checks = HealthCheckService::new(Arc::clone(&self.registry));
-        checks.health_check_frequency = Some(Duration::from_secs(1));
+        checks.health_check_frequency = Some(self.health_check_interval);
         checks.parallel_health_check = true;
         checks
     }

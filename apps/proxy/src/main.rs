@@ -1,11 +1,12 @@
 use std::collections::HashSet;
 use std::net::{IpAddr, SocketAddr};
+use std::num::NonZeroU32;
 
 use clap::Parser;
 use pingora::{
     proxy::http_proxy_service, server::Server, services::background::background_service,
 };
-use proxy_balancer::{HealthCheckMode, RoundRobinPool};
+use proxy_balancer::{HealthCheckMode, HttpHealthOptions, RoundRobinPool};
 use proxy_http::ReverseProxy;
 use proxy_security::IpAccessPolicy;
 
@@ -27,9 +28,21 @@ struct Args {
     )]
     upstreams: Vec<SocketAddr>,
 
-    /// Periksa port TCP atau kirim GET /health ke tiap backend (HTTP 200 berarti sehat).
+    /// Periksa port TCP atau kirim GET ke tiap backend (HTTP 200 berarti sehat).
     #[arg(long, value_name = "tcp|http", default_value = "tcp")]
     health_check: HealthCheckMode,
+
+    /// Path yang diminta tiap probe HTTP (bawaan /health).
+    #[arg(long, value_name = "PATH")]
+    health_check_path: Option<String>,
+
+    /// Jeda setelah satu putaran probe HTTP selesai, dalam milidetik (bawaan 1000).
+    #[arg(long, value_name = "MS")]
+    health_check_interval_ms: Option<NonZeroU32>,
+
+    /// Batas total tiap probe HTTP dalam milidetik (bawaan 2000).
+    #[arg(long, value_name = "MS")]
+    health_check_timeout_ms: Option<NonZeroU32>,
 
     /// Izinkan IP ini. Jika diisi, hanya IP dalam allowlist yang boleh lewat. Bisa diulang.
     #[arg(long, value_name = "IP")]
@@ -70,7 +83,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .split_first()
         .ok_or("Diperlukan minimal satu backend.")?;
     let policy = IpAccessPolicy::new(args.allow_ip, args.deny_ip);
-    let pool = RoundRobinPool::with_health_check(first, remaining, args.health_check);
+    let pool = RoundRobinPool::with_health_check_options(
+        first,
+        remaining,
+        args.health_check,
+        HttpHealthOptions {
+            path: args.health_check_path,
+            interval_ms: args.health_check_interval_ms,
+            timeout_ms: args.health_check_timeout_ms,
+        },
+    )?;
     let checks = background_service("Health check backend", pool.health_checks());
     let proxy = ReverseProxy::from_pool(pool).with_ip_policy(policy);
     let mut server = Server::new(None)?;

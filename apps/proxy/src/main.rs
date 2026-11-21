@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use std::net::{IpAddr, SocketAddr};
-use std::num::NonZeroU32;
+use std::num::{NonZeroU32, NonZeroUsize};
 
 use clap::Parser;
 use pingora::{
@@ -43,6 +43,14 @@ struct Args {
     /// Batas total tiap probe HTTP dalam milidetik (bawaan 2000).
     #[arg(long, value_name = "MS")]
     health_check_timeout_ms: Option<NonZeroU32>,
+
+    /// Jumlah probe HTTP gagal berturut-turut agar backend keluar dari rotasi (bawaan 1).
+    #[arg(long, value_name = "N")]
+    health_check_failure_threshold: Option<NonZeroUsize>,
+
+    /// Jumlah probe HTTP sukses berturut-turut agar backend kembali ke rotasi (bawaan 1).
+    #[arg(long, value_name = "N")]
+    health_check_success_threshold: Option<NonZeroUsize>,
 
     /// Izinkan IP ini. Jika diisi, hanya IP dalam allowlist yang boleh lewat. Bisa diulang.
     #[arg(long, value_name = "IP")]
@@ -91,6 +99,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             path: args.health_check_path,
             interval_ms: args.health_check_interval_ms,
             timeout_ms: args.health_check_timeout_ms,
+            failure_threshold: args.health_check_failure_threshold,
+            success_threshold: args.health_check_success_threshold,
         },
     )?;
     let checks = background_service("Health check backend", pool.health_checks());

@@ -1,4 +1,9 @@
-use std::{collections::HashMap, num::NonZeroU32, str::FromStr, time::Duration};
+use std::{
+    collections::HashMap,
+    num::{NonZeroU32, NonZeroUsize},
+    str::FromStr,
+    time::Duration,
+};
 
 use async_trait::async_trait;
 use pingora::lb::{
@@ -19,6 +24,8 @@ pub struct HttpHealthOptions {
     pub path: Option<String>,
     pub interval_ms: Option<NonZeroU32>,
     pub timeout_ms: Option<NonZeroU32>,
+    pub failure_threshold: Option<NonZeroUsize>,
+    pub success_threshold: Option<NonZeroUsize>,
 }
 
 impl FromStr for HealthCheckMode {
@@ -42,7 +49,7 @@ impl HealthCheckMode {
         match self {
             Self::Tcp if *options != HttpHealthOptions::default() => Error::e_explain(
                 ErrorType::Custom("Konfigurasi health check"),
-                "Opsi path, interval, dan timeout HTTP memerlukan --health-check http",
+                "Opsi probe HTTP memerlukan --health-check http",
             ),
             Self::Tcp => Ok(TcpHealthCheck::new()),
             Self::Http => Ok(Box::new(HttpEndpointChecks::new(targets, options)?)),
@@ -54,6 +61,8 @@ impl HealthCheckMode {
 struct HttpEndpointChecks {
     probes: HashMap<SocketAddr, HttpHealthCheck>,
     timeout: Duration,
+    failure_threshold: usize,
+    success_threshold: usize,
 }
 
 impl HttpEndpointChecks {
@@ -82,6 +91,8 @@ impl HttpEndpointChecks {
         Ok(Self {
             probes,
             timeout: timeout.unwrap_or(Duration::from_secs(2)),
+            failure_threshold: options.failure_threshold.map_or(1, NonZeroUsize::get),
+            success_threshold: options.success_threshold.map_or(1, NonZeroUsize::get),
         })
     }
 }
@@ -103,7 +114,11 @@ impl HealthCheck for HttpEndpointChecks {
             })?
     }
 
-    fn health_threshold(&self, _success: bool) -> usize {
-        1
+    fn health_threshold(&self, success: bool) -> usize {
+        if success {
+            self.success_threshold
+        } else {
+            self.failure_threshold
+        }
     }
 }

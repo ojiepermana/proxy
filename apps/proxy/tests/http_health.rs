@@ -201,6 +201,58 @@ fn excludes_timed_out_ready_endpoint_and_rejoins_after_recovery() {
 }
 
 #[test]
+fn applies_consecutive_thresholds_to_ready_probes() {
+    let a = Origin::new("A", "/ready", 200);
+    let b = Origin::new("B", "/ready", 200);
+    let options = [
+        "--health-check",
+        "http",
+        "--health-check-path",
+        "/ready",
+        "--health-check-interval-ms",
+        "25",
+        "--health-check-timeout-ms",
+        "10000",
+        "--health-check-failure-threshold",
+        "3",
+        "--health-check-success-threshold",
+        "2",
+    ];
+    let (_proxy, client) = start_proxy(&[a.addr(), b.addr()], &options);
+    let proxy = client.peer_addr().unwrap();
+    let pending = b.hold_health();
+    let mut probe = pending.recv_timeout(TIMEOUT).unwrap();
+
+    for (step, (status, expected)) in [
+        (500, "ABAB"),
+        (500, "ABAB"),
+        (200, "ABAB"), // Memutus rentetan gagal.
+        (500, "ABAB"),
+        (500, "ABAB"),
+        (500, "AAAA"),
+        (200, "AAAA"),
+        (500, "AAAA"), // Memutus rentetan sukses.
+        (200, "AAAA"),
+        (200, "BABA"),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        probe.respond(Response::empty(status)).unwrap();
+        // Tahan probe berikutnya agar trafik mencerminkan tepat satu hasil baru.
+        probe = pending.recv_timeout(TIMEOUT).unwrap();
+        for marker in expected.chars() {
+            assert_eq!(
+                fetch(proxy),
+                (200, marker.to_string()),
+                "hasil probe B ke-{} ({status})",
+                step + 1
+            );
+        }
+    }
+}
+
+#[test]
 fn accepts_ready_response_within_extended_timeout() {
     let a = Origin::new("A", "/ready", 200);
     let pending = a.hold_health();

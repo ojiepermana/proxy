@@ -36,9 +36,22 @@ done
 2. Jalankan kembali enam request di atas. Semua respons sekarang berasal dari `proxy-http`.
 3. Nyalakan kembali backend pada port `8001` dengan perintah yang sama. Setelah probe berikutnya berhasil, kedua nama kembali muncul bergantian tanpa restart proxy.
 
-Proxy memeriksa semua backend secara paralel dengan koneksi TCP sebelum listener menerima trafik, lalu mengulang pemeriksaan setiap satu detik. Batas waktu koneksi probe adalah satu detik. Satu probe gagal mengeluarkan backend dari rotasi dan satu probe sukses mengembalikannya. Pemeriksaan ini mengukur apakah port backend menerima koneksi TCP.
+Secara default, proxy memeriksa apakah port TCP tiap backend menerima koneksi, dengan batas waktu satu detik. Probe berjalan paralel sebelum listener menerima trafik dan diulang setiap satu detik. Satu probe gagal mengeluarkan backend dari rotasi dan satu probe sukses mengembalikannya.
 
 Jika backend mati di antara dua probe dan koneksi gagal sebelum request dikirim, proxy mencoba backend lain yang tersedia. Jika semua backend mati, proxy mengembalikan `502 Bad Gateway` dan tetap memeriksa pemulihannya.
+
+### Memeriksa kesiapan aplikasi lewat HTTP
+
+Jika kedua backend menyediakan endpoint `/health`, aktifkan pemeriksaan HTTP saat menjalankan proxy.
+
+```sh
+cargo run --locked -- --health-check http \
+  --upstream 127.0.0.1:8000 --upstream 127.0.0.1:8001
+```
+
+Proxy mengirim `GET /health` langsung ke setiap backend dengan header `Host` berisi alamat dan port tujuan. Hanya respons `200 OK` yang menandakan backend sehat. Respons `500`, status lain, atau probe yang gagal atau melebihi dua detik mengeluarkan backend dari rotasi. Request berikutnya menuju backend sehat. Jika semuanya gagal, klien mendapat `502 Bad Gateway`.
+
+Probe tetap berjalan selama backend berada di luar rotasi. Setelah satu probe mendapat `200 OK` dan selesai, backend kembali melayani request secara round robin tanpa restart. Untuk mengulangi skenario `200 → 500 → 200` dengan dua backend lokal, jalankan `cargo test -p proxy --test http_health --locked`.
 
 ## Konfigurasi satu backend
 

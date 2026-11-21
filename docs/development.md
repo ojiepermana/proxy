@@ -15,7 +15,8 @@ Tempatkan unit test di modul pemilik dalam `#[cfg(test)] mod tests`. Letakkan in
 | Listener dan forwarding | Binary meneruskan metode, path, query, header, dan body ke backend HTTP lokal. Respons sukses dan backend offline diuji lewat jaringan loopback. | `cargo test -p proxy --test forwarding --locked` |
 | Round robin | Dua backend lokal menerima sepuluh request bergantian pada satu koneksi klien. Periksa identitas backend di setiap respons. | `cargo test -p proxy --test forwarding --locked alternates_backends` |
 | Aturan IP | Periksa allowlist, denylist, prioritas deny, alamat IPv4-mapped IPv6, dan peer tanpa IP. | `cargo test -p proxy-security --locked` |
-| Health check | Periksa hasil probe TCP untuk pool yang sebagian atau seluruhnya offline. Uji binary dengan menghentikan backend lalu menyalakannya lagi di port yang sama dan periksa urutan respons. | `cargo test -p proxy-balancer --locked` dan `cargo test -p proxy --test forwarding --locked routes_to_survivor` |
+| Health check TCP | Periksa hasil probe TCP untuk pool yang sebagian atau seluruhnya offline. Uji binary dengan menghentikan backend lalu menyalakannya lagi di port yang sama dan periksa urutan respons. | `cargo test -p proxy-balancer --locked` dan `cargo test -p proxy --test forwarding --locked routes_to_survivor` |
+| Health check HTTP | Biarkan kedua backend menyala. Ubah status `/health` salah satunya dari 200 ke 500 lalu kembali ke 200. Tunggu hasil probe, periksa urutan respons klien, dan hitung request aplikasi yang diterima tiap backend. Uji juga respons 502 ketika semua probe gagal sejak startup. | `cargo test -p proxy --test http_health --locked` |
 | Penolakan request HTTP | Klien yang diblokir mendapat 403, backend tidak menerima request tersebut, dan POST yang diizinkan mencapai backend. | `cargo test -p proxy --test forwarding --locked` |
 
 ## Memeriksa perubahan

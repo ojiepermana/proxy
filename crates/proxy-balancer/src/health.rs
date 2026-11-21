@@ -2,7 +2,7 @@ use std::{
     collections::HashMap,
     num::{NonZeroU32, NonZeroUsize},
     str::FromStr,
-    sync::{Arc, Mutex, Weak},
+    sync::{Arc, Mutex, MutexGuard, Weak},
     time::Duration,
 };
 
@@ -59,51 +59,87 @@ impl HealthCheckMode {
     }
 }
 
+#[derive(Default)]
+pub(super) struct ProbeState {
+    pub(super) consecutive_successes: usize,
+    pub(super) consecutive_failures: usize,
+    startup: Option<Weak<Backends>>,
+}
+
+impl ProbeState {
+    fn observe(&mut self, target: &Backend, success: bool, success_threshold: usize) {
+        if success {
+            self.consecutive_successes = self.consecutive_successes.saturating_add(1);
+            self.consecutive_failures = 0;
+            if self.consecutive_successes == success_threshold
+                && let Some(view) = self.startup.take().and_then(|view| view.upgrade())
+            {
+                view.set_enable(target, true);
+            }
+        } else {
+            self.consecutive_failures = self.consecutive_failures.saturating_add(1);
+            self.consecutive_successes = 0;
+        }
+    }
+}
+
+pub(super) struct ProbeStreaks(HashMap<SocketAddr, Mutex<ProbeState>>);
+
+impl ProbeStreaks {
+    pub(super) fn new(view: &Arc<Backends>, start_unhealthy: bool) -> Self {
+        let mut states = HashMap::new();
+        for target in view.get_backend().iter() {
+            let mut state = ProbeState::default();
+            if start_unhealthy {
+                view.set_enable(target, false);
+                state.startup = Some(Arc::downgrade(view));
+            }
+            states.insert(target.addr.clone(), Mutex::new(state));
+        }
+        Self(states)
+    }
+
+    pub(super) fn for_target(&self, target: &Backend) -> MutexGuard<'_, ProbeState> {
+        self.0[&target.addr].lock().expect("penghitung probe")
+    }
+}
+
+pub(super) struct CountedHealthCheck {
+    pub(super) inner: Box<dyn HealthCheck + Send + Sync>,
+    pub(super) streaks: Arc<ProbeStreaks>,
+}
+
+#[async_trait]
+impl HealthCheck for CountedHealthCheck {
+    async fn check(&self, target: &Backend) -> Result<()> {
+        let result = self.inner.check(target).await;
+        self.streaks.for_target(target).observe(
+            target,
+            result.is_ok(),
+            self.health_threshold(true),
+        );
+        result
+    }
+
+    fn health_threshold(&self, success: bool) -> usize {
+        self.inner.health_threshold(success)
+    }
+
+    async fn health_status_change(&self, target: &Backend, healthy: bool) {
+        self.inner.health_status_change(target, healthy).await;
+    }
+
+    fn backend_summary(&self, target: &Backend) -> String {
+        self.inner.backend_summary(target)
+    }
+}
+
 // Setiap backend memiliki header Host sendiri. Probe dipakai ulang antarputaran.
 struct HttpEndpointChecks {
     probes: HashMap<SocketAddr, HttpHealthCheck>,
     timeout: Duration,
     failure_threshold: usize,
     success_threshold: usize,
-    startup: Option<StartupAdmission>,
-}
-
-// Hanya backend yang belum pernah masuk rotasi yang memiliki penghitung di sini.
-struct StartupAdmission {
-    view: Weak<Backends>,
-    successes: Mutex<HashMap<SocketAddr, usize>>,
-}
-
-impl StartupAdmission {
-    fn new(view: &Arc<Backends>) -> Self {
-        let mut successes = HashMap::new();
-        for target in view.get_backend().iter() {
-            view.set_enable(target, false);
-            successes.insert(target.addr.clone(), 0);
-        }
-        Self {
-            view: Arc::downgrade(view),
-            successes: Mutex::new(successes),
-        }
-    }
-
-    fn observe(&self, target: &Backend, success: bool, threshold: usize) {
-        let mut pending = self.successes.lock().expect("penghitung probe startup");
-        let Some(streak) = pending.get_mut(&target.addr) else {
-            return;
-        };
-        if !success {
-            *streak = 0;
-            return;
-        }
-        *streak += 1;
-        if *streak == threshold {
-            pending.remove(&target.addr);
-            if let Some(view) = self.view.upgrade() {
-                view.set_enable(target, true);
-            }
-        }
-    }
 }
 
 impl HttpEndpointChecks {
@@ -135,7 +171,6 @@ impl HttpEndpointChecks {
             timeout: timeout.unwrap_or(Duration::from_secs(2)),
             failure_threshold: options.failure_threshold.map_or(1, NonZeroUsize::get),
             success_threshold: options.success_threshold.map_or(1, NonZeroUsize::get),
-            startup: options.start_unhealthy.then(|| StartupAdmission::new(view)),
         })
     }
 }
@@ -146,7 +181,7 @@ impl HealthCheck for HttpEndpointChecks {
         let probe = self.probes.get(&target.addr).ok_or_else(|| {
             Error::explain(ErrorType::InternalError, "Backend probe belum terdaftar")
         })?;
-        let result = tokio::time::timeout(self.timeout, probe.check(target))
+        tokio::time::timeout(self.timeout, probe.check(target))
             .await
             .unwrap_or_else(|e| {
                 Err(Error::because(
@@ -154,11 +189,7 @@ impl HealthCheck for HttpEndpointChecks {
                     "Batas waktu probe HTTP terlampaui",
                     e,
                 ))
-            });
-        if let Some(startup) = &self.startup {
-            startup.observe(target, result.is_ok(), self.success_threshold);
-        }
-        result
+            })
     }
 
     fn health_threshold(&self, success: bool) -> usize {

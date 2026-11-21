@@ -82,10 +82,17 @@ Kirim `GET /status` ke listener proxy. Respons JSON memuat setiap alamat sesuai 
 curl -sS http://127.0.0.1:8080/status
 ```
 
-Dalam contoh ini, baru backend pertama yang mencapai ambang sukses.
+Setiap backend memiliki dua penghitung yang mulai dari nol. `consecutive_successes` bertambah saat probe berhasil dan kembali nol saat probe gagal. `consecutive_failures` bertambah saat probe gagal, termasuk timeout, dan kembali nol saat probe berhasil. Keduanya berlaku untuk probe TCP dan HTTP. Rentetan tetap dihitung setelah ambang perubahan status tercapai.
+
+Dalam contoh ini, backend pertama telah berhasil dua kali berturut-turut dan probe terakhir backend kedua gagal.
 
 ```json
-{"backends":[{"address":"127.0.0.1:8000","healthy":true},{"address":"127.0.0.1:8001","healthy":false}]}
+{
+  "backends": [
+    {"address":"127.0.0.1:8000","healthy":true,"consecutive_successes":2,"consecutive_failures":0},
+    {"address":"127.0.0.1:8001","healthy":false,"consecutive_successes":0,"consecutive_failures":1}
+  ]
+}
 ```
 
 Proxy menjawab sendiri setelah memeriksa aturan IP. Membaca status tidak memicu probe atau mengambil giliran round robin. Klien yang diizinkan mendapat `200 OK` meskipun semua backend belum siap. Path `/status` juga mendukung `HEAD`. Metode lain mengikuti alur proxy biasa.

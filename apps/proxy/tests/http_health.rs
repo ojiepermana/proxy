@@ -195,6 +195,12 @@ fn excludes_timed_out_ready_endpoint_and_rejoins_after_recovery() {
     let first = pending.recv_timeout(TIMEOUT).unwrap();
     // Probe berikutnya hanya dapat tiba setelah timeout dan jeda antarputaran.
     let _next = pending.recv_timeout(Duration::from_millis(900)).unwrap();
+    let (code, body) = get(proxy, "/status");
+    assert_eq!(code, 200);
+    let status: serde_json::Value = serde_json::from_str(&body).unwrap();
+    let backend_b = &status["backends"][1];
+    assert_eq!(backend_b["consecutive_successes"], 0);
+    assert!(backend_b["consecutive_failures"].as_u64().unwrap() >= 1);
     for _ in 0..12 {
         assert_eq!(fetch(proxy), (200, "A".into()));
     }
@@ -283,37 +289,40 @@ fn starts_unhealthy_until_each_ready_endpoint_passes_twice() {
     let proxy = client.peer_addr().unwrap();
     let mut probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
     let mut probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
-    let assert_status = |a_healthy: bool, b_healthy: bool| {
+    let assert_status = |routes: &str, a_counts: [usize; 2], b_counts: [usize; 2]| {
         let (code, body) = get(proxy, "/status");
         assert_eq!(code, 200);
         assert_eq!(
             serde_json::from_str::<serde_json::Value>(&body).unwrap(),
             serde_json::json!({"backends": [
-                {"address": a.addr(), "healthy": a_healthy},
-                {"address": b.addr(), "healthy": b_healthy}
+                {"address": a.addr(), "healthy": routes.contains('A'),
+                 "consecutive_successes": a_counts[0], "consecutive_failures": a_counts[1]},
+                {"address": b.addr(), "healthy": routes.contains('B'),
+                 "consecutive_successes": b_counts[0], "consecutive_failures": b_counts[1]}
             ]})
         );
     };
-    assert_status(false, false);
+    assert_status("", [0, 0], [0, 0]);
     assert_eq!(fetch(proxy).0, 502);
 
-    for (status_a, status_b, expected) in [
-        (200, 500, ""),
-        (500, 200, ""),
-        (200, 500, ""), // Kegagalan memutus rentetan sukses masing-masing backend.
-        (200, 200, "AAAA"),
-        (200, 200, "BABA"),
-        (500, 500, "BABA"), // Setelah masuk, ambang gagal biasa berlaku.
-        (500, 200, "BABA"),
-        (500, 200, "BBBB"),
-        (200, 200, "BBBB"),
-        (200, 200, "ABAB"),
+    for (status_a, status_b, expected, a_counts, b_counts) in [
+        (200, 500, "", [1, 0], [0, 1]),
+        (500, 200, "", [0, 1], [1, 0]),
+        (200, 500, "", [1, 0], [0, 1]),
+        (200, 200, "AAAA", [2, 0], [1, 0]),
+        (200, 200, "BABA", [3, 0], [2, 0]),
+        (500, 500, "BABA", [0, 1], [0, 1]),
+        (500, 200, "BABA", [0, 2], [1, 0]),
+        (500, 200, "BBBB", [0, 3], [2, 0]),
+        (500, 200, "BBBB", [0, 4], [3, 0]),
+        (200, 200, "BBBB", [1, 0], [4, 0]),
+        (200, 200, "ABAB", [2, 0], [5, 0]),
     ] {
         probe_a.respond(Response::empty(status_a)).unwrap();
         probe_b.respond(Response::empty(status_b)).unwrap();
         probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
         probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
-        assert_status(expected.contains('A'), expected.contains('B'));
+        assert_status(expected, a_counts, b_counts);
         if expected.is_empty() {
             assert_eq!(fetch(proxy).0, 502);
             assert_eq!(a.traffic.load(Ordering::Relaxed), 0);

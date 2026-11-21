@@ -1,6 +1,7 @@
 //! Pemilihan backend sehat secara round robin sesuai urutan konfigurasi.
 
 mod health;
+use health::{CountedHealthCheck, ProbeStreaks};
 pub use health::{HealthCheckMode, HttpHealthOptions};
 
 use std::net::SocketAddr;
@@ -10,11 +11,19 @@ use std::time::Duration;
 use futures::FutureExt;
 use pingora::lb::{Backend, Backends, HealthCheckService, HealthRegistry, discovery::Static};
 
+pub struct BackendStatus {
+    pub address: SocketAddr,
+    pub healthy: bool,
+    pub consecutive_successes: usize,
+    pub consecutive_failures: usize,
+}
+
 /// Urutan konfigurasi dan kesehatan backend yang dipakai bersama oleh semua request.
 pub struct RoundRobinPool {
     targets: Box<[Backend]>,
     view: Arc<Backends>,
     registry: Arc<HealthRegistry>,
+    streaks: Arc<ProbeStreaks>,
     health_check_interval: Duration,
     next: Mutex<usize>,
 }
@@ -58,11 +67,17 @@ impl RoundRobinPool {
             .now_or_never()
             .expect("discovery statis selesai tanpa I/O")
             .expect("alamat backend statis sudah valid");
-        registry.set_health_check(mode.build(&view, &options)?);
+        let inner = mode.build(&view, &options)?;
+        let streaks = Arc::new(ProbeStreaks::new(&view, options.start_unhealthy));
+        registry.set_health_check(Box::new(CountedHealthCheck {
+            inner,
+            streaks: Arc::clone(&streaks),
+        }));
         Ok(Self {
             targets,
             view,
             registry,
+            streaks,
             health_check_interval: Duration::from_millis(
                 options.interval_ms.map_or(1000, |ms| ms.get().into()),
             ),
@@ -79,9 +94,20 @@ impl RoundRobinPool {
 
     /// Alamat dan kesiapan tiap backend sesuai urutan konfigurasi, tanpa mengambil giliran.
     pub fn backend_statuses(&self) -> impl Iterator<Item = (SocketAddr, bool)> + '_ {
+        self.backend_probe_statuses()
+            .map(|status| (status.address, status.healthy))
+    }
+
+    /// Kesiapan dan rentetan hasil probe terakhir untuk setiap alamat dalam konfigurasi.
+    pub fn backend_probe_statuses(&self) -> impl Iterator<Item = BackendStatus> + '_ {
         self.targets.iter().map(|target| {
-            let address = *target.addr.as_inet().expect("target berupa alamat IP");
-            (address, self.view.ready(target))
+            let state = self.streaks.for_target(target);
+            BackendStatus {
+                address: *target.addr.as_inet().expect("target berupa alamat IP"),
+                healthy: self.view.ready(target),
+                consecutive_successes: state.consecutive_successes,
+                consecutive_failures: state.consecutive_failures,
+            }
         })
     }
 
@@ -116,21 +142,30 @@ mod tests {
         let c = TcpListener::bind("127.0.0.1:0").unwrap();
         let [a_addr, b_addr, c_addr] = [&a, &b, &c].map(|s| s.local_addr().unwrap());
         let pool = RoundRobinPool::new(a_addr, &[b_addr, c_addr]);
+        let counts = || {
+            pool.backend_probe_statuses()
+                .map(|status| (status.consecutive_successes, status.consecutive_failures))
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(counts(), [(0, 0), (0, 0), (0, 0)]);
 
         drop(b);
         pool.registry.run_health_check(false).await;
+        assert_eq!(counts(), [(1, 0), (0, 1), (1, 0)]);
         for expected in [a_addr, c_addr, a_addr, c_addr] {
             assert_eq!(pool.select(), Some(expected));
         }
 
         let b = TcpListener::bind(b_addr).unwrap();
         pool.registry.run_health_check(false).await;
+        assert_eq!(counts(), [(2, 0), (1, 0), (2, 0)]);
         for expected in [a_addr, b_addr, c_addr] {
             assert_eq!(pool.select(), Some(expected));
         }
 
         drop((a, b, c));
         pool.registry.run_health_check(false).await;
+        assert_eq!(counts(), [(0, 1), (0, 1), (0, 1)]);
         assert_eq!(pool.select(), None);
     }
 }

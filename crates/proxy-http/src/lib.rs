@@ -54,8 +54,15 @@ impl ReverseProxy {
     async fn respond_status(&self, session: &mut Session) -> Result<()> {
         let backends: Vec<_> = self
             .backends
-            .backend_statuses()
-            .map(|(address, healthy)| json!({ "address": address, "healthy": healthy }))
+            .backend_probe_statuses()
+            .map(|status| {
+                json!({
+                    "address": status.address,
+                    "healthy": status.healthy,
+                    "consecutive_successes": status.consecutive_successes,
+                    "consecutive_failures": status.consecutive_failures,
+                })
+            })
             .collect();
         let body = json!({ "backends": backends }).to_string();
         let mut header = ResponseHeader::build(200, Some(3))?;

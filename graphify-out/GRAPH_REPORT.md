@@ -1,7 +1,7 @@
 # Graph Report - proxy  (2026-11-22)
 
 ## Corpus Check
-- Corpus is ~6,365 words - fits in a single context window. You may not need a graph.
+- Corpus is ~6,377 words - fits in a single context window. You may not need a graph.
 
 ## Summary
 - 198 nodes · 370 edges · 8 communities
@@ -105,6 +105,6 @@ _Questions this graph is uniquely positioned to answer:_
   _Cohesion score 0.14022988505747128 - nodes in this community are weakly interconnected._
 ## Cakupan ekstraksi
 
-- Versi kode sumber yang dipindai: `8ab8d284`.
+- Versi kode sumber yang dipindai: `c11f9614`.
 - Dari relasi mentah, 47 mengacu ke simpul yang tidak ditemukan. Graf tak berarah menyatukan 37 relasi tambahan yang berbagi pasangan simpul.
 - Manifest workspace di root (`Cargo.toml`) tidak menghasilkan simpul. Keempat manifest package tercakup.

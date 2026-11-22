@@ -2172,9 +2172,9 @@
       "contributor": null,
       "file_type": "rationale",
       "norm_label": "pembaruan graf bersama melalui git",
-      "rationale": "Perubahan graf dan sumber masuk ke commit yang sama agar hasil git pull dapat langsung dikueri dan dibuka di browser.",
+      "rationale": "Sebelum setiap commit, jalankan graphify update . dari root setelah semua perubahan siap, termasuk saat sumber tetap sama. Ulangi jika sumber berubah lagi. Jika dokumentasi berubah, jalankan /graphify . --update di Codex dan beri hasil ekstraksi penanda _origin: \"semantic\" sebelum penggabungan dengan AST agar relasi dokumen bertahan. Commit hanya setelah pembaruan berhasil. Sertakan perubahan graphify-out/ dan sumber dalam satu commit agar graf dapat dikueri dan graph.html dibuka setelah git pull.",
       "source_file": "AGENTS.md",
-      "source_location": "L12",
+      "source_location": "L10",
       "source_url": null
     },
     {
@@ -6289,7 +6289,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "AGENTS.md",
-      "source_location": "L12",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
@@ -6596,5 +6596,5 @@
       "_origin": "semantic"
     }
   ],
-  "built_at_commit": "8ab8d2849de18a156737ec54b00c4baf5fb02fca"
+  "built_at_commit": "c11f9614b2f4058798381a788040b963776f35d8"
 }

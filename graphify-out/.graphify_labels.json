@@ -1,0 +1,10 @@
+{
+  "0": "Probe dan penghitung kesehatan",
+  "1": "Tes kesiapan HTTP",
+  "2": "Panduan operasi dan arsitektur",
+  "3": "Rotasi backend sehat",
+  "4": "Konfigurasi dan akses IP",
+  "5": "Penanganan request HTTP",
+  "6": "Tes forwarding dan pemulihan",
+  "7": "Dependensi antar-crate"
+}

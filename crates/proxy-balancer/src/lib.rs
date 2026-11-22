@@ -1,8 +1,8 @@
 //! Pemilihan backend sehat secara round robin sesuai urutan konfigurasi.
 
 mod health;
+pub use health::{CompletedProbe, HealthCheckMode, HttpHealthOptions, ProbeResult};
 use health::{CountedHealthCheck, ProbeStreaks};
-pub use health::{HealthCheckMode, HttpHealthOptions};
 
 use std::net::SocketAddr;
 use std::sync::{Arc, Mutex};
@@ -16,6 +16,7 @@ pub struct BackendStatus {
     pub healthy: bool,
     pub consecutive_successes: usize,
     pub consecutive_failures: usize,
+    pub last_probe: Option<CompletedProbe>,
 }
 
 /// Urutan konfigurasi dan kesehatan backend yang dipakai bersama oleh semua request.
@@ -70,6 +71,7 @@ impl RoundRobinPool {
         let inner = mode.build(&view, &options)?;
         let streaks = Arc::new(ProbeStreaks::new(&view, options.start_unhealthy));
         registry.set_health_check(Box::new(CountedHealthCheck {
+            mode,
             inner,
             streaks: Arc::clone(&streaks),
         }));
@@ -98,7 +100,7 @@ impl RoundRobinPool {
             .map(|status| (status.address, status.healthy))
     }
 
-    /// Kesiapan dan rentetan hasil probe terakhir untuk setiap alamat dalam konfigurasi.
+    /// Kesiapan, penghitung, dan probe terakhir yang selesai pada setiap alamat.
     pub fn backend_probe_statuses(&self) -> impl Iterator<Item = BackendStatus> + '_ {
         self.targets.iter().map(|target| {
             let state = self.streaks.for_target(target);
@@ -107,6 +109,7 @@ impl RoundRobinPool {
                 healthy: self.view.ready(target),
                 consecutive_successes: state.consecutive_successes,
                 consecutive_failures: state.consecutive_failures,
+                last_probe: state.last_probe,
             }
         })
     }
@@ -152,6 +155,18 @@ mod tests {
         drop(b);
         pool.registry.run_health_check(false).await;
         assert_eq!(counts(), [(1, 0), (0, 1), (1, 0)]);
+        let results: Vec<_> = pool
+            .backend_probe_statuses()
+            .map(|status| status.last_probe.unwrap().result)
+            .collect();
+        assert_eq!(
+            results,
+            [
+                ProbeResult::TcpConnected,
+                ProbeResult::Error,
+                ProbeResult::TcpConnected
+            ]
+        );
         for expected in [a_addr, c_addr, a_addr, c_addr] {
             assert_eq!(pool.select(), Some(expected));
         }

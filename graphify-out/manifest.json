@@ -1,9 +1,9 @@
 {
   "apps/proxy/Cargo.toml": {
-    "mtime": 1795305567.0438387,
-    "seen": 1795305625.734071,
-    "ast_hash": "7fc2fbed51c79c721a13061368fbc1e4",
-    "semantic_hash": "7fc2fbed51c79c721a13061368fbc1e4"
+    "mtime": 1795306362.17698,
+    "seen": 1795306522.8518379,
+    "ast_hash": "60811e188aab29c2939d3254cc798928",
+    "semantic_hash": "60811e188aab29c2939d3254cc798928"
   },
   "apps/proxy/src/main.rs": {
     "mtime": 1795305567.0440001,
@@ -18,10 +18,10 @@
     "semantic_hash": "1c72c654a18f1f42ec2fe0fbea419cfa"
   },
   "apps/proxy/tests/http_health.rs": {
-    "mtime": 1795305567.044345,
-    "seen": 1795305625.734078,
-    "ast_hash": "a333038df7b3889f1178e768430dd494",
-    "semantic_hash": "a333038df7b3889f1178e768430dd494"
+    "mtime": 1795306404.974574,
+    "seen": 1795306522.8518422,
+    "ast_hash": "81c412c6f47cf82a3ed4affc6fcced32",
+    "semantic_hash": "81c412c6f47cf82a3ed4affc6fcced32"
   },
   "apps/proxy/tests/support/mod.rs": {
     "mtime": 1795305567.0445004,
@@ -36,28 +36,28 @@
     "semantic_hash": "444aece9dde31a5a0ab542197a7ca8f6"
   },
   "crates/proxy-balancer/src/health.rs": {
-    "mtime": 1795305567.0448616,
-    "seen": 1795305625.73408,
-    "ast_hash": "127b5dfb7720a65ee0e7bb2ee97dca5f",
-    "semantic_hash": "127b5dfb7720a65ee0e7bb2ee97dca5f"
+    "mtime": 1795306404.9772334,
+    "seen": 1795306522.851844,
+    "ast_hash": "04ebbe19c74e0593c3ce3753f3bdd62c",
+    "semantic_hash": "04ebbe19c74e0593c3ce3753f3bdd62c"
   },
   "crates/proxy-balancer/src/lib.rs": {
-    "mtime": 1795305567.0449643,
-    "seen": 1795305625.734081,
-    "ast_hash": "b6e364b7a4cbc0cee26577b7a8b960ed",
-    "semantic_hash": "b6e364b7a4cbc0cee26577b7a8b960ed"
+    "mtime": 1795306404.9781969,
+    "seen": 1795306522.851845,
+    "ast_hash": "3cc153795b6334b9d311daa946fe9e34",
+    "semantic_hash": "3cc153795b6334b9d311daa946fe9e34"
   },
   "crates/proxy-http/Cargo.toml": {
-    "mtime": 1795305567.0450993,
-    "seen": 1795305625.734082,
-    "ast_hash": "be08312edda18a1b5d661c38f8d64f34",
-    "semantic_hash": "be08312edda18a1b5d661c38f8d64f34"
+    "mtime": 1795306362.176777,
+    "seen": 1795306522.851846,
+    "ast_hash": "5753c482feee0e1bd774881cc63fc971",
+    "semantic_hash": "5753c482feee0e1bd774881cc63fc971"
   },
   "crates/proxy-http/src/lib.rs": {
-    "mtime": 1795305567.0452547,
-    "seen": 1795305625.734082,
-    "ast_hash": "cd9baa82f126a0a1610bd19be1aca0bb",
-    "semantic_hash": "cd9baa82f126a0a1610bd19be1aca0bb"
+    "mtime": 1795306404.9801989,
+    "seen": 1795306522.851846,
+    "ast_hash": "b1cc5fa49aebfb74deb42f03004d9fa1",
+    "semantic_hash": "b1cc5fa49aebfb74deb42f03004d9fa1"
   },
   "crates/proxy-security/Cargo.toml": {
     "mtime": 1795305567.0453963,
@@ -84,21 +84,21 @@
     "semantic_hash": "029391bace8d740b7e135f3f4f5db0a2"
   },
   "README.md": {
-    "mtime": 1795305567.0436363,
-    "seen": 1795305625.7340858,
-    "ast_hash": "e97a29b91615c8f447a232c39d1f28de",
-    "semantic_hash": "e97a29b91615c8f447a232c39d1f28de"
+    "mtime": 1795306402.6932404,
+    "seen": 1795306522.851829,
+    "ast_hash": "e4e6bfa1a8c248cf3bcdc1bcb30285cd",
+    "semantic_hash": "e4e6bfa1a8c248cf3bcdc1bcb30285cd"
   },
   "docs/architecture.md": {
-    "mtime": 1795305567.0456867,
-    "seen": 1795305625.7340858,
-    "ast_hash": "7d1233464d10c68856cb627dc1b5a6c6",
-    "semantic_hash": "7d1233464d10c68856cb627dc1b5a6c6"
+    "mtime": 1795306402.6935635,
+    "seen": 1795306522.851837,
+    "ast_hash": "c45192f6e816b5c94433f2ed9b982257",
+    "semantic_hash": "c45192f6e816b5c94433f2ed9b982257"
   },
   "docs/development.md": {
-    "mtime": 1795305567.045787,
-    "seen": 1795305625.734087,
-    "ast_hash": "cf68753113ba7f4f24f29c8fc0804e80",
-    "semantic_hash": "cf68753113ba7f4f24f29c8fc0804e80"
+    "mtime": 1795306402.693758,
+    "seen": 1795306522.8518348,
+    "ast_hash": "5563d334c9c6018bc7cd3f08cc4c8c92",
+    "semantic_hash": "5563d334c9c6018bc7cd3f08cc4c8c92"
   }
 }

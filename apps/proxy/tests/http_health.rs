@@ -8,8 +8,10 @@ use std::sync::{
     mpsc,
 };
 use std::thread;
-use std::time::{Duration, Instant};
+use std::time::{Duration, Instant, SystemTime};
 
+use chrono::{DateTime, Utc};
+use serde_json::{Value, json};
 use support::{TIMEOUT, start_proxy};
 use tiny_http::{Method, Request, Response, Server};
 
@@ -135,6 +137,30 @@ fn get(proxy: SocketAddr, path: &str) -> (u16, String) {
     (status, body.to_owned())
 }
 
+fn backend_statuses(proxy: SocketAddr) -> Vec<Value> {
+    let (code, body) = get(proxy, "/status");
+    assert_eq!(code, 200);
+    let mut status: Value = serde_json::from_str(&body).unwrap();
+    serde_json::from_value(status["backends"].take()).unwrap()
+}
+
+fn assert_probe(backend: &Value, since: SystemTime, result: &str, code: Option<u16>) {
+    let probe = &backend["last_probe"];
+    assert_eq!(probe["result"], result);
+    assert_eq!(
+        probe.get("status_code"),
+        code.map(|code| json!(code)).as_ref()
+    );
+    let timestamp = probe["completed_at"].as_str().unwrap();
+    assert!(timestamp.ends_with('Z'));
+    let millis = DateTime::parse_from_rfc3339(timestamp)
+        .unwrap()
+        .timestamp_millis();
+    let earliest = DateTime::<Utc>::from(since).timestamp_millis();
+    let latest = DateTime::<Utc>::from(SystemTime::now()).timestamp_millis();
+    assert!((earliest..=latest).contains(&millis), "{timestamp}");
+}
+
 #[test]
 fn excludes_http_500_and_rejoins_after_http_200() {
     let a = Origin::new("A", "/health", 200);
@@ -165,8 +191,15 @@ fn excludes_http_500_and_rejoins_after_http_200() {
 fn returns_502_when_neither_health_endpoint_returns_200_at_startup() {
     let a = Origin::new("A", "/health", 500);
     let b = Origin::new("B", "/health", 204);
+    let since = SystemTime::now();
     let (_proxy, client) = start_proxy(&[a.addr(), b.addr()], &["--health-check", "http"]);
     assert_eq!(fetch(client.peer_addr().unwrap()).0, 502);
+    assert_probe(
+        &backend_statuses(client.peer_addr().unwrap())[1],
+        since,
+        "http_status",
+        Some(204),
+    );
     assert_eq!(a.traffic.load(Ordering::Relaxed), 0);
     assert_eq!(b.traffic.load(Ordering::Relaxed), 0);
 }
@@ -191,14 +224,14 @@ fn excludes_timed_out_ready_endpoint_and_rejoins_after_recovery() {
         assert_eq!(fetch(proxy), (200, expected.into()));
     }
 
+    let since = SystemTime::now();
     let pending = b.hold_health();
     let first = pending.recv_timeout(TIMEOUT).unwrap();
     // Probe berikutnya hanya dapat tiba setelah timeout dan jeda antarputaran.
     let _next = pending.recv_timeout(Duration::from_millis(900)).unwrap();
-    let (code, body) = get(proxy, "/status");
-    assert_eq!(code, 200);
-    let status: serde_json::Value = serde_json::from_str(&body).unwrap();
-    let backend_b = &status["backends"][1];
+    let backends = backend_statuses(proxy);
+    let backend_b = &backends[1];
+    assert_probe(backend_b, since, "timeout", None);
     assert_eq!(backend_b["consecutive_successes"], 0);
     assert!(backend_b["consecutive_failures"].as_u64().unwrap() >= 1);
     for _ in 0..12 {
@@ -206,7 +239,9 @@ fn excludes_timed_out_ready_endpoint_and_rejoins_after_recovery() {
     }
     assert_eq!(b.traffic.load(Ordering::Relaxed), 2);
     let _ = first.respond(Response::empty(200));
+    let since = SystemTime::now();
     b.set_health_and_wait(200);
+    assert_probe(&backend_statuses(proxy)[1], since, "http_status", Some(200));
     for expected in ["B", "A", "B", "A", "B", "A"] {
         assert_eq!(fetch(proxy), (200, expected.into()));
     }
@@ -289,20 +324,15 @@ fn starts_unhealthy_until_each_ready_endpoint_passes_twice() {
     let proxy = client.peer_addr().unwrap();
     let mut probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
     let mut probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
-    let assert_status = |routes: &str, a_counts: [usize; 2], b_counts: [usize; 2]| {
-        let (code, body) = get(proxy, "/status");
-        assert_eq!(code, 200);
-        assert_eq!(
-            serde_json::from_str::<serde_json::Value>(&body).unwrap(),
-            serde_json::json!({"backends": [
-                {"address": a.addr(), "healthy": routes.contains('A'),
-                 "consecutive_successes": a_counts[0], "consecutive_failures": a_counts[1]},
-                {"address": b.addr(), "healthy": routes.contains('B'),
-                 "consecutive_successes": b_counts[0], "consecutive_failures": b_counts[1]}
-            ]})
-        );
-    };
-    assert_status("", [0, 0], [0, 0]);
+    let initial = backend_statuses(proxy);
+    assert_eq!(initial.len(), 2);
+    for (backend, address) in initial.iter().zip([a.addr(), b.addr()]) {
+        assert_eq!(backend["address"], address.to_string());
+        assert_eq!(backend["healthy"], false);
+        assert_eq!(backend["consecutive_successes"], 0);
+        assert_eq!(backend["consecutive_failures"], 0);
+        assert_eq!(backend.get("last_probe"), Some(&Value::Null));
+    }
     assert_eq!(fetch(proxy).0, 502);
 
     for (status_a, status_b, expected, a_counts, b_counts) in [
@@ -318,11 +348,23 @@ fn starts_unhealthy_until_each_ready_endpoint_passes_twice() {
         (200, 200, "BBBB", [1, 0], [4, 0]),
         (200, 200, "ABAB", [2, 0], [5, 0]),
     ] {
+        let since = SystemTime::now();
         probe_a.respond(Response::empty(status_a)).unwrap();
         probe_b.respond(Response::empty(status_b)).unwrap();
         probe_a = pending_a.recv_timeout(TIMEOUT).unwrap();
         probe_b = pending_b.recv_timeout(TIMEOUT).unwrap();
-        assert_status(expected, a_counts, b_counts);
+        let backends = backend_statuses(proxy);
+        for (index, marker, counts, status) in
+            [(0, 'A', a_counts, status_a), (1, 'B', b_counts, status_b)]
+        {
+            let backend = &backends[index];
+            assert_eq!(backend["healthy"], expected.contains(marker));
+            assert_eq!(backend["consecutive_successes"], counts[0]);
+            assert_eq!(backend["consecutive_failures"], counts[1]);
+            assert_probe(backend, since, "http_status", Some(status));
+        }
+        // Membaca status lagi saat probe berikutnya tertahan harus memberi waktu yang sama.
+        assert_eq!(backend_statuses(proxy), backends);
         if expected.is_empty() {
             assert_eq!(fetch(proxy).0, 502);
             assert_eq!(a.traffic.load(Ordering::Relaxed), 0);

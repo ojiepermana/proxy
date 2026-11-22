@@ -6,6 +6,7 @@ publish.workspace = true
 
 [dependencies]
 async-trait.workspace = true
+chrono.workspace = true
 pingora = { workspace = true, features = ["proxy"] }
 proxy-balancer.workspace = true
 proxy-security.workspace = true

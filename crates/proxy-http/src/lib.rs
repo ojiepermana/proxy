@@ -4,13 +4,14 @@ use std::net::SocketAddr;
 use std::time::Duration;
 
 use async_trait::async_trait;
+use chrono::{DateTime, SecondsFormat, Utc};
 use pingora::{
     Error, ErrorType, Result,
     http::{Method, ResponseHeader},
     prelude::HttpPeer,
     proxy::{ProxyHttp, Session},
 };
-use proxy_balancer::RoundRobinPool;
+use proxy_balancer::{CompletedProbe, ProbeResult, RoundRobinPool};
 use proxy_security::IpAccessPolicy;
 use serde_json::json;
 
@@ -28,6 +29,21 @@ pub type SingleBackend = ReverseProxy;
 pub struct RequestBackend {
     selected: Option<SocketAddr>,
     failed: Vec<SocketAddr>,
+}
+
+fn probe_json(probe: CompletedProbe) -> serde_json::Value {
+    let completed_at =
+        DateTime::<Utc>::from(probe.completed_at).to_rfc3339_opts(SecondsFormat::Millis, true);
+    match probe.result {
+        ProbeResult::HttpStatus(code) => {
+            json!({"completed_at": completed_at, "result": "http_status", "status_code": code})
+        }
+        ProbeResult::TcpConnected => {
+            json!({"completed_at": completed_at, "result": "tcp_connected"})
+        }
+        ProbeResult::Timeout => json!({"completed_at": completed_at, "result": "timeout"}),
+        ProbeResult::Error => json!({"completed_at": completed_at, "result": "error"}),
+    }
 }
 
 impl ReverseProxy {
@@ -61,6 +77,7 @@ impl ReverseProxy {
                     "healthy": status.healthy,
                     "consecutive_successes": status.consecutive_successes,
                     "consecutive_failures": status.consecutive_failures,
+                    "last_probe": status.last_probe.map(probe_json),
                 })
             })
             .collect();

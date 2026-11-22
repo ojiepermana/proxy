@@ -84,13 +84,17 @@ curl -sS http://127.0.0.1:8080/status
 
 Setiap backend memiliki dua penghitung yang mulai dari nol. `consecutive_successes` bertambah saat probe berhasil dan kembali nol saat probe gagal. `consecutive_failures` bertambah saat probe gagal, termasuk timeout, dan kembali nol saat probe berhasil. Keduanya berlaku untuk probe TCP dan HTTP. Rentetan tetap dihitung setelah ambang perubahan status tercapai.
 
-Dalam contoh ini, backend pertama telah berhasil dua kali berturut-turut dan probe terakhir backend kedua gagal.
+`last_probe` bernilai `null` sampai probe pertama pada backend tersebut selesai. Setelah itu, `completed_at` mencatat waktu selesai dalam UTC (RFC 3339, presisi milidetik). Selama probe berikutnya berlangsung, hasil terakhir tetap terlihat.
+
+Untuk probe HTTP, `result` bernilai `http_status` dengan `status_code` dari backend. Hanya `200` dengan respons yang selesai dibaca yang dihitung sukses. Probe yang melewati batas waktu menghasilkan `timeout`. Koneksi TCP yang berhasil menghasilkan `tcp_connected`, dan kegagalan lain seperti koneksi ditolak menghasilkan `error`. Ketiga hasil ini tidak memuat `status_code`.
 
 ```json
 {
   "backends": [
-    {"address":"127.0.0.1:8000","healthy":true,"consecutive_successes":2,"consecutive_failures":0},
-    {"address":"127.0.0.1:8001","healthy":false,"consecutive_successes":0,"consecutive_failures":1}
+    {"address":"127.0.0.1:8000","healthy":true,"consecutive_successes":2,"consecutive_failures":0,
+     "last_probe":{"completed_at":"2026-11-22T01:30:00.120Z","result":"http_status","status_code":200}},
+    {"address":"127.0.0.1:8001","healthy":false,"consecutive_successes":0,"consecutive_failures":1,
+     "last_probe":{"completed_at":"2026-11-22T01:30:00.124Z","result":"http_status","status_code":500}}
   ]
 }
 ```

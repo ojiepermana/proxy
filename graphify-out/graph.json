@@ -5,12 +5,13 @@
     "hyperedges": [
       {
         "id": "docs_architecture_publikasi_kesiapan_backend",
-        "label": "Pembacaan kesiapan dan penghitung untuk status backend",
+        "label": "Pembacaan kesiapan, penghitung dan probe terakhir untuk status backend",
         "nodes": [
           "readme_status_backend",
           "readme_round_robin",
           "readme_rentetan_probe",
-          "crates_proxy_balancer_src_lib_roundrobinpool_backend_probe_statuses"
+          "crates_proxy_balancer_src_lib_roundrobinpool_backend_probe_statuses",
+          "readme_last_probe"
         ],
         "relation": "participate_in",
         "confidence": "EXTRACTED",
@@ -33,6 +34,17 @@
       "source_location": "L1"
     },
     {
+      "id": "crates_proxy_balancer_src_health_completedprobe",
+      "label": "CompletedProbe",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "file_type": "code",
+      "norm_label": "completedprobe",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L31"
+    },
+    {
       "id": "crates_proxy_balancer_src_health_countedhealthcheck",
       "label": "CountedHealthCheck",
       "_origin": "ast",
@@ -41,7 +53,7 @@
       "file_type": "code",
       "norm_label": "countedhealthcheck",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L107"
+      "source_location": "L143"
     },
     {
       "id": "crates_proxy_balancer_src_health_countedhealthcheck_backend_summary",
@@ -52,7 +64,7 @@
       "file_type": "code",
       "norm_label": ".backend_summary()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L132"
+      "source_location": "L171"
     },
     {
       "id": "crates_proxy_balancer_src_health_countedhealthcheck_check",
@@ -63,7 +75,7 @@
       "file_type": "code",
       "norm_label": ".check()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L114"
+      "source_location": "L151"
     },
     {
       "id": "crates_proxy_balancer_src_health_countedhealthcheck_health_status_change",
@@ -74,7 +86,7 @@
       "file_type": "code",
       "norm_label": ".health_status_change()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L128"
+      "source_location": "L167"
     },
     {
       "id": "crates_proxy_balancer_src_health_countedhealthcheck_health_threshold",
@@ -85,18 +97,7 @@
       "file_type": "code",
       "norm_label": ".health_threshold()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L124"
-    },
-    {
-      "id": "crates_proxy_balancer_src_health_healthcheckmode",
-      "label": "HealthCheckMode",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "Probe dan penghitung kesehatan",
-      "file_type": "code",
-      "norm_label": "healthcheckmode",
-      "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L17"
+      "source_location": "L163"
     },
     {
       "id": "crates_proxy_balancer_src_health_healthcheckmode_build",
@@ -107,7 +108,7 @@
       "file_type": "code",
       "norm_label": ".build()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46"
+      "source_location": "L77"
     },
     {
       "id": "crates_proxy_balancer_src_health_healthcheckmode_from_str",
@@ -118,7 +119,18 @@
       "file_type": "code",
       "norm_label": ".from_str()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L36"
+      "source_location": "L50"
+    },
+    {
+      "id": "crates_proxy_balancer_src_health_healthcheckmode_probe_result",
+      "label": ".probe_result()",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "file_type": "code",
+      "norm_label": ".probe_result()",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L60"
     },
     {
       "id": "crates_proxy_balancer_src_health_httpendpointchecks",
@@ -129,7 +141,7 @@
       "file_type": "code",
       "norm_label": "httpendpointchecks",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L138"
+      "source_location": "L177"
     },
     {
       "id": "crates_proxy_balancer_src_health_httpendpointchecks_check",
@@ -140,7 +152,7 @@
       "file_type": "code",
       "norm_label": ".check()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L180"
+      "source_location": "L219"
     },
     {
       "id": "crates_proxy_balancer_src_health_httpendpointchecks_health_threshold",
@@ -151,7 +163,7 @@
       "file_type": "code",
       "norm_label": ".health_threshold()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L195"
+      "source_location": "L234"
     },
     {
       "id": "crates_proxy_balancer_src_health_httpendpointchecks_new",
@@ -162,7 +174,7 @@
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L146"
+      "source_location": "L185"
     },
     {
       "id": "crates_proxy_balancer_src_health_httphealthoptions",
@@ -173,7 +185,18 @@
       "file_type": "code",
       "norm_label": "httphealthoptions",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L24"
+      "source_location": "L38"
+    },
+    {
+      "id": "crates_proxy_balancer_src_health_proberesult",
+      "label": "ProbeResult",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "file_type": "code",
+      "norm_label": "proberesult",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L23"
     },
     {
       "id": "crates_proxy_balancer_src_health_probestate",
@@ -184,7 +207,7 @@
       "file_type": "code",
       "norm_label": "probestate",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L63"
+      "source_location": "L94"
     },
     {
       "id": "crates_proxy_balancer_src_health_probestate_observe",
@@ -195,7 +218,7 @@
       "file_type": "code",
       "norm_label": ".observe()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L70"
+      "source_location": "L102"
     },
     {
       "id": "crates_proxy_balancer_src_health_probestreaks",
@@ -206,7 +229,7 @@
       "file_type": "code",
       "norm_label": "probestreaks",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L86"
+      "source_location": "L122"
     },
     {
       "id": "crates_proxy_balancer_src_health_probestreaks_for_target",
@@ -217,7 +240,7 @@
       "file_type": "code",
       "norm_label": ".for_target()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L102"
+      "source_location": "L138"
     },
     {
       "id": "crates_proxy_balancer_src_health_probestreaks_new",
@@ -228,7 +251,7 @@
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L89"
+      "source_location": "L125"
     },
     {
       "id": "crates_proxy_balancer_src_health_rs_arc",
@@ -374,6 +397,39 @@
       "source_location": ""
     },
     {
+      "id": "crates_proxy_balancer_src_health_rs_systemtime",
+      "label": "SystemTime",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "file_type": "code",
+      "norm_label": "systemtime",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_proxy_http_src_lib_probe_json",
+      "label": "probe_json()",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "file_type": "code",
+      "norm_label": "probe_json()",
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L34"
+    },
+    {
+      "id": "crates_proxy_http_src_lib_rs_value",
+      "label": "Value",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "file_type": "code",
+      "norm_label": "value",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "err",
       "label": "Err",
       "_origin": "ast",
@@ -381,17 +437,6 @@
       "community_name": "Probe dan penghitung kesehatan",
       "file_type": "code",
       "norm_label": "err",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "fromstr",
-      "label": "FromStr",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "Probe dan penghitung kesehatan",
-      "file_type": "code",
-      "norm_label": "fromstr",
       "source_file": "",
       "source_location": ""
     },
@@ -481,7 +526,7 @@
       "file_type": "code",
       "norm_label": "accepts_ready_response_within_extended_timeout()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L348"
+      "source_location": "L390"
     },
     {
       "id": "apps_proxy_tests_http_health_applies_consecutive_thresholds_to_ready_probes",
@@ -492,7 +537,29 @@
       "file_type": "code",
       "norm_label": "applies_consecutive_thresholds_to_ready_probes()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L216"
+      "source_location": "L251"
+    },
+    {
+      "id": "apps_proxy_tests_http_health_assert_probe",
+      "label": "assert_probe()",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Tes kesiapan HTTP",
+      "file_type": "code",
+      "norm_label": "assert_probe()",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L147"
+    },
+    {
+      "id": "apps_proxy_tests_http_health_backend_statuses",
+      "label": "backend_statuses()",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Tes kesiapan HTTP",
+      "file_type": "code",
+      "norm_label": "backend_statuses()",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L140"
     },
     {
       "id": "apps_proxy_tests_http_health_denies_status_to_a_blocked_client",
@@ -503,7 +570,7 @@
       "file_type": "code",
       "norm_label": "denies_status_to_a_blocked_client()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L339"
+      "source_location": "L381"
     },
     {
       "id": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
@@ -514,7 +581,7 @@
       "file_type": "code",
       "norm_label": "excludes_http_500_and_rejoins_after_http_200()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L139"
+      "source_location": "L165"
     },
     {
       "id": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
@@ -525,7 +592,7 @@
       "file_type": "code",
       "norm_label": "excludes_timed_out_ready_endpoint_and_rejoins_after_recovery()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L175"
+      "source_location": "L208"
     },
     {
       "id": "apps_proxy_tests_http_health_fetch",
@@ -536,7 +603,7 @@
       "file_type": "code",
       "norm_label": "fetch()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L119"
+      "source_location": "L121"
     },
     {
       "id": "apps_proxy_tests_http_health_get",
@@ -547,7 +614,7 @@
       "file_type": "code",
       "norm_label": "get()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L123"
+      "source_location": "L125"
     },
     {
       "id": "apps_proxy_tests_http_health_healthreply",
@@ -558,7 +625,7 @@
       "file_type": "code",
       "norm_label": "healthreply",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L16"
+      "source_location": "L18"
     },
     {
       "id": "apps_proxy_tests_http_health_origin",
@@ -569,7 +636,7 @@
       "file_type": "code",
       "norm_label": "origin",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L21"
+      "source_location": "L23"
     },
     {
       "id": "apps_proxy_tests_http_health_origin_addr",
@@ -580,7 +647,7 @@
       "file_type": "code",
       "norm_label": ".addr()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L81"
+      "source_location": "L83"
     },
     {
       "id": "apps_proxy_tests_http_health_origin_hold_health",
@@ -591,7 +658,7 @@
       "file_type": "code",
       "norm_label": ".hold_health()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L105"
+      "source_location": "L107"
     },
     {
       "id": "apps_proxy_tests_http_health_origin_new",
@@ -602,7 +669,7 @@
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L30"
+      "source_location": "L32"
     },
     {
       "id": "apps_proxy_tests_http_health_origin_set_health_and_wait",
@@ -613,7 +680,7 @@
       "file_type": "code",
       "norm_label": ".set_health_and_wait()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L85"
+      "source_location": "L87"
     },
     {
       "id": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
@@ -624,7 +691,7 @@
       "file_type": "code",
       "norm_label": "returns_502_when_neither_health_endpoint_returns_200_at_startup()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L165"
+      "source_location": "L191"
     },
     {
       "id": "apps_proxy_tests_http_health_rs_arc",
@@ -715,6 +782,39 @@
       "source_location": ""
     },
     {
+      "id": "apps_proxy_tests_http_health_rs_systemtime",
+      "label": "SystemTime",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Tes kesiapan HTTP",
+      "file_type": "code",
+      "norm_label": "systemtime",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_proxy_tests_http_health_rs_value",
+      "label": "Value",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Tes kesiapan HTTP",
+      "file_type": "code",
+      "norm_label": "value",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "apps_proxy_tests_http_health_rs_vec",
+      "label": "Vec",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "Tes kesiapan HTTP",
+      "file_type": "code",
+      "norm_label": "vec",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "apps_proxy_tests_http_health_starts_unhealthy_until_each_ready_endpoint_passes_twice",
       "label": "starts_unhealthy_until_each_ready_endpoint_passes_twice()",
       "_origin": "ast",
@@ -723,7 +823,7 @@
       "file_type": "code",
       "norm_label": "starts_unhealthy_until_each_ready_endpoint_passes_twice()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L268"
+      "source_location": "L303"
     },
     {
       "id": "atomicusize",
@@ -958,7 +1058,7 @@
       "node_kind": "heading",
       "norm_label": "aturan akses ip",
       "source_file": "README.md",
-      "source_location": "L108"
+      "source_location": "L112"
     },
     {
       "id": "readme_konfigurasi_satu_backend",
@@ -970,7 +1070,7 @@
       "node_kind": "heading",
       "norm_label": "konfigurasi satu backend",
       "source_file": "README.md",
-      "source_location": "L100"
+      "source_location": "L104"
     },
     {
       "id": "readme_melihat_status_tiap_backend",
@@ -1030,7 +1130,7 @@
       "node_kind": "heading",
       "norm_label": "mengembangkan fitur",
       "source_file": "README.md",
-      "source_location": "L124"
+      "source_location": "L128"
     },
     {
       "id": "readme_proxy",
@@ -1043,6 +1143,17 @@
       "norm_label": "proxy",
       "source_file": "README.md",
       "source_location": "L1"
+    },
+    {
+      "id": "crates_proxy_balancer_src_health_healthcheckmode",
+      "label": "HealthCheckMode",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Rotasi backend sehat",
+      "file_type": "code",
+      "norm_label": "healthcheckmode",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L17"
     },
     {
       "id": "crates_proxy_balancer_src_lib",
@@ -1075,7 +1186,7 @@
       "file_type": "code",
       "norm_label": "roundrobinpool",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L22"
+      "source_location": "L23"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_backend_probe_statuses",
@@ -1086,7 +1197,7 @@
       "file_type": "code",
       "norm_label": ".backend_probe_statuses()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L102"
+      "source_location": "L104"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_backend_statuses",
@@ -1097,7 +1208,7 @@
       "file_type": "code",
       "norm_label": ".backend_statuses()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L96"
+      "source_location": "L98"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_health_checks",
@@ -1108,7 +1219,7 @@
       "file_type": "code",
       "norm_label": ".health_checks()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L88"
+      "source_location": "L90"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_new",
@@ -1119,7 +1230,7 @@
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L32"
+      "source_location": "L33"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_select",
@@ -1130,7 +1241,7 @@
       "file_type": "code",
       "norm_label": ".select()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L114"
+      "source_location": "L117"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_select_excluding",
@@ -1141,7 +1252,7 @@
       "file_type": "code",
       "norm_label": ".select_excluding()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L119"
+      "source_location": "L122"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_with_health_check",
@@ -1152,7 +1263,7 @@
       "file_type": "code",
       "norm_label": ".with_health_check()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L36"
+      "source_location": "L37"
     },
     {
       "id": "crates_proxy_balancer_src_lib_roundrobinpool_with_health_check_options",
@@ -1163,7 +1274,7 @@
       "file_type": "code",
       "norm_label": ".with_health_check_options()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L45"
+      "source_location": "L46"
     },
     {
       "id": "crates_proxy_balancer_src_lib_rs_arc",
@@ -1284,7 +1395,18 @@
       "file_type": "code",
       "norm_label": "selects_only_backends_that_pass_tcp_probes()",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L139"
+      "source_location": "L142"
+    },
+    {
+      "id": "fromstr",
+      "label": "FromStr",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Rotasi backend sehat",
+      "file_type": "code",
+      "norm_label": "fromstr",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "healthcheckservice",
@@ -1342,17 +1464,6 @@
       "source_location": ""
     },
     {
-      "id": "apps_proxy_src_main",
-      "label": "main.rs",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "main.rs",
-      "source_file": "apps/proxy/src/main.rs",
-      "source_location": "L1"
-    },
-    {
       "id": "apps_proxy_src_main_args",
       "label": "Args",
       "_origin": "ast",
@@ -1362,39 +1473,6 @@
       "norm_label": "args",
       "source_file": "apps/proxy/src/main.rs",
       "source_location": "L18"
-    },
-    {
-      "id": "apps_proxy_src_main_main",
-      "label": "main()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "apps/proxy/src/main.rs",
-      "source_location": "L68"
-    },
-    {
-      "id": "apps_proxy_src_main_rs_box",
-      "label": "Box",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "box",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "apps_proxy_src_main_rs_error",
-      "label": "Error",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "error",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "apps_proxy_src_main_rs_ipaddr",
@@ -1441,17 +1519,6 @@
       "source_location": ""
     },
     {
-      "id": "apps_proxy_src_main_rs_result",
-      "label": "Result",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "result",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "apps_proxy_src_main_rs_socketaddr",
       "label": "SocketAddr",
       "_origin": "ast",
@@ -1485,123 +1552,57 @@
       "source_location": ""
     },
     {
-      "id": "crates_proxy_security_src_lib",
-      "label": "proxy-security/src/lib.rs",
+      "id": "apps_proxy_src_main",
+      "label": "main.rs",
       "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
       "file_type": "code",
-      "norm_label": "proxy-security/src/lib.rs",
-      "source_file": "crates/proxy-security/src/lib.rs",
+      "norm_label": "main.rs",
+      "source_file": "apps/proxy/src/main.rs",
       "source_location": "L1"
     },
     {
-      "id": "crates_proxy_security_src_lib_evaluates_empty_lists_allowlist_denylist_and_overlap",
-      "label": "evaluates_empty_lists_allowlist_denylist_and_overlap()",
+      "id": "apps_proxy_src_main_main",
+      "label": "main()",
       "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
       "file_type": "code",
-      "norm_label": "evaluates_empty_lists_allowlist_denylist_and_overlap()",
-      "source_file": "crates/proxy-security/src/lib.rs",
-      "source_location": "L34"
+      "norm_label": "main()",
+      "source_file": "apps/proxy/src/main.rs",
+      "source_location": "L68"
     },
     {
-      "id": "crates_proxy_security_src_lib_ipaccesspolicy",
-      "label": "IpAccessPolicy",
+      "id": "apps_proxy_src_main_rs_box",
+      "label": "Box",
       "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
       "file_type": "code",
-      "norm_label": "ipaccesspolicy",
-      "source_file": "crates/proxy-security/src/lib.rs",
-      "source_location": "L8"
-    },
-    {
-      "id": "crates_proxy_security_src_lib_ipaccesspolicy_allows",
-      "label": ".allows()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": ".allows()",
-      "source_file": "crates/proxy-security/src/lib.rs",
-      "source_location": "L21"
-    },
-    {
-      "id": "crates_proxy_security_src_lib_ipaccesspolicy_new",
-      "label": ".new()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": ".new()",
-      "source_file": "crates/proxy-security/src/lib.rs",
-      "source_location": "L14"
-    },
-    {
-      "id": "crates_proxy_security_src_lib_matches_ipv4_and_its_ipv6_mapped_form",
-      "label": "matches_ipv4_and_its_ipv6_mapped_form()",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "matches_ipv4_and_its_ipv6_mapped_form()",
-      "source_file": "crates/proxy-security/src/lib.rs",
-      "source_location": "L54"
-    },
-    {
-      "id": "crates_proxy_security_src_lib_rs_ipaddr",
-      "label": "IpAddr",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "ipaddr",
+      "norm_label": "box",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "crates_proxy_security_src_lib_rs_option",
-      "label": "Option",
+      "id": "apps_proxy_src_main_rs_error",
+      "label": "Error",
       "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
       "file_type": "code",
-      "norm_label": "option",
+      "norm_label": "error",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "crates_proxy_security_src_lib_rs_self",
-      "label": "Self",
+      "id": "apps_proxy_src_main_rs_result",
+      "label": "Result",
       "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
       "file_type": "code",
-      "norm_label": "self",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "crates_proxy_security_src_lib_rs_vec",
-      "label": "Vec",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "vec",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "hashset",
-      "label": "HashSet",
-      "_origin": "ast",
-      "community": 4,
-      "community_name": "Konfigurasi dan akses IP",
-      "file_type": "code",
-      "norm_label": "hashset",
+      "norm_label": "result",
       "source_file": "",
       "source_location": ""
     },
@@ -1625,7 +1626,7 @@
       "file_type": "code",
       "norm_label": "requestbackend",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L28"
+      "source_location": "L29"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy",
@@ -1636,7 +1637,7 @@
       "file_type": "code",
       "norm_label": "reverseproxy",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L18"
+      "source_location": "L19"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_fail_to_connect",
@@ -1647,7 +1648,7 @@
       "file_type": "code",
       "norm_label": ".fail_to_connect()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L124"
+      "source_location": "L141"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_from_pool",
@@ -1658,7 +1659,7 @@
       "file_type": "code",
       "norm_label": ".from_pool()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L42"
+      "source_location": "L58"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_new",
@@ -1669,7 +1670,7 @@
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L34"
+      "source_location": "L50"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_new_ctx",
@@ -1680,7 +1681,7 @@
       "file_type": "code",
       "norm_label": ".new_ctx()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L87"
+      "source_location": "L104"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_request_filter",
@@ -1691,7 +1692,7 @@
       "file_type": "code",
       "norm_label": ".request_filter()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L91"
+      "source_location": "L108"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_respond_status",
@@ -1702,7 +1703,7 @@
       "file_type": "code",
       "norm_label": ".respond_status()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L54"
+      "source_location": "L70"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_upstream_peer",
@@ -1713,7 +1714,7 @@
       "file_type": "code",
       "norm_label": ".upstream_peer()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L109"
+      "source_location": "L126"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_with_backends",
@@ -1724,7 +1725,7 @@
       "file_type": "code",
       "norm_label": ".with_backends()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L38"
+      "source_location": "L54"
     },
     {
       "id": "crates_proxy_http_src_lib_reverseproxy_with_ip_policy",
@@ -1735,7 +1736,7 @@
       "file_type": "code",
       "norm_label": ".with_ip_policy()",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L49"
+      "source_location": "L65"
     },
     {
       "id": "crates_proxy_http_src_lib_rs_box",
@@ -1815,6 +1816,116 @@
       "source_location": ""
     },
     {
+      "id": "crates_proxy_security_src_lib",
+      "label": "proxy-security/src/lib.rs",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "proxy-security/src/lib.rs",
+      "source_file": "crates/proxy-security/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "crates_proxy_security_src_lib_evaluates_empty_lists_allowlist_denylist_and_overlap",
+      "label": "evaluates_empty_lists_allowlist_denylist_and_overlap()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "evaluates_empty_lists_allowlist_denylist_and_overlap()",
+      "source_file": "crates/proxy-security/src/lib.rs",
+      "source_location": "L34"
+    },
+    {
+      "id": "crates_proxy_security_src_lib_ipaccesspolicy",
+      "label": "IpAccessPolicy",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "ipaccesspolicy",
+      "source_file": "crates/proxy-security/src/lib.rs",
+      "source_location": "L8"
+    },
+    {
+      "id": "crates_proxy_security_src_lib_ipaccesspolicy_allows",
+      "label": ".allows()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": ".allows()",
+      "source_file": "crates/proxy-security/src/lib.rs",
+      "source_location": "L21"
+    },
+    {
+      "id": "crates_proxy_security_src_lib_ipaccesspolicy_new",
+      "label": ".new()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": ".new()",
+      "source_file": "crates/proxy-security/src/lib.rs",
+      "source_location": "L14"
+    },
+    {
+      "id": "crates_proxy_security_src_lib_matches_ipv4_and_its_ipv6_mapped_form",
+      "label": "matches_ipv4_and_its_ipv6_mapped_form()",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "matches_ipv4_and_its_ipv6_mapped_form()",
+      "source_file": "crates/proxy-security/src/lib.rs",
+      "source_location": "L54"
+    },
+    {
+      "id": "crates_proxy_security_src_lib_rs_ipaddr",
+      "label": "IpAddr",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "ipaddr",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_proxy_security_src_lib_rs_option",
+      "label": "Option",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "option",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_proxy_security_src_lib_rs_self",
+      "label": "Self",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "self",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "crates_proxy_security_src_lib_rs_vec",
+      "label": "Vec",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "vec",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "ctx",
       "label": "CTX",
       "_origin": "ast",
@@ -1822,6 +1933,17 @@
       "community_name": "Penanganan request HTTP",
       "file_type": "code",
       "norm_label": "ctx",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "hashset",
+      "label": "HashSet",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "Penanganan request HTTP",
+      "file_type": "code",
+      "norm_label": "hashset",
       "source_file": "",
       "source_location": ""
     },
@@ -1977,7 +2099,7 @@
       "file_type": "code",
       "norm_label": ".drop()",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L113"
+      "source_location": "L115"
     },
     {
       "id": "apps_proxy_tests_support_mod",
@@ -2131,6 +2253,54 @@
       "type": "package"
     },
     {
+      "id": "readme_hasil_probe",
+      "label": "Hasil probe TCP dan HTTP",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "hasil probe tcp dan http",
+      "rationale": "http_status menyertakan status_code. HTTP 200 yang dibaca sampai selesai dan tcp_connected menandai keberhasilan. timeout dan error menandai kegagalan. Hanya http_status menyertakan kode.",
+      "source_file": "README.md",
+      "source_location": "L89",
+      "source_url": null
+    },
+    {
+      "id": "readme_last_probe",
+      "label": "last_probe \u2014 probe terakhir yang selesai",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 0,
+      "community_name": "Probe dan penghitung kesehatan",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "last_probe \u2014 probe terakhir yang selesai",
+      "rationale": "Bernilai null sampai probe pertama selesai pada backend tersebut. completed_at memuat waktu selesai dalam UTC RFC 3339 dengan presisi milidetik. Selama probe berikutnya berjalan, hasil ini masih dapat dibaca.",
+      "source_file": "README.md",
+      "source_location": "L87",
+      "source_url": null
+    },
+    {
+      "id": "docs_development_pengujian_last_probe",
+      "label": "Pengujian last_probe melalui listener",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 1,
+      "community_name": "Tes kesiapan HTTP",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "pengujian last_probe melalui listener",
+      "rationale": "Mencakup kondisi awal null, HTTP 200 dan 500, timeout, pemulihan, waktu selesai tiap putaran, dan kestabilan hasil selama probe berikutnya tertahan.",
+      "source_file": "docs/development.md",
+      "source_location": "L23",
+      "source_url": null
+    },
+    {
       "id": "docs_development_pengujian_kesiapan",
       "label": "Pengujian kesiapan melalui listener",
       "_origin": "semantic",
@@ -2190,7 +2360,7 @@
       "norm_label": "aturan akses ip peer tcp",
       "rationale": "Proxy memakai IP peer TCP untuk keputusan akses. Denylist mendahului allowlist.",
       "source_file": "README.md",
-      "source_location": "L110",
+      "source_location": "L114",
       "source_url": null
     },
     {
@@ -2306,7 +2476,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L349",
+      "source_location": "L391",
       "weight": 1.0
     },
     {
@@ -2318,7 +2488,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L350",
+      "source_location": "L392",
       "weight": 1.0
     },
     {
@@ -2330,7 +2500,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L365",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -2342,7 +2512,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L217",
+      "source_location": "L252",
       "weight": 1.0
     },
     {
@@ -2354,7 +2524,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L233",
+      "source_location": "L268",
       "weight": 1.0
     },
     {
@@ -2366,7 +2536,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L235",
+      "source_location": "L270",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_backend_statuses",
+      "target": "apps_proxy_tests_http_health_get",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -2378,7 +2560,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L340",
+      "source_location": "L382",
       "weight": 1.0
     },
     {
@@ -2390,7 +2572,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L341",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -2402,143 +2584,11 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L342",
+      "source_location": "L384",
       "weight": 1.0
     },
     {
       "source": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
-      "target": "apps_proxy_tests_http_health_origin_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L140",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
-      "target": "apps_proxy_tests_http_health_origin_addr",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L142",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
-      "target": "apps_proxy_tests_http_health_origin_drop",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L144",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
-      "target": "apps_proxy_tests_http_health_origin_set_health_and_wait",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L150",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
-      "target": "apps_proxy_tests_http_health_origin_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L176",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
-      "target": "apps_proxy_tests_http_health_origin_addr",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L188",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
-      "target": "apps_proxy_tests_http_health_origin_hold_health",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L194",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
-      "target": "apps_proxy_tests_http_health_get",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L198",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
-      "target": "apps_proxy_tests_http_health_origin_set_health_and_wait",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L209",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_fetch",
-      "target": "apps_proxy_tests_http_health_get",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L120",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_get",
-      "target": "apps_proxy_tests_http_health_origin_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L131",
-      "weight": 1.0
-    },
-    {
-      "source": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
       "target": "apps_proxy_tests_http_health_origin_new",
       "relation": "calls",
       "_origin": "ast",
@@ -2550,7 +2600,7 @@
       "weight": 1.0
     },
     {
-      "source": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
+      "source": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
       "target": "apps_proxy_tests_http_health_origin_addr",
       "relation": "calls",
       "_origin": "ast",
@@ -2562,6 +2612,174 @@
       "weight": 1.0
     },
     {
+      "source": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
+      "target": "apps_proxy_tests_http_health_origin_drop",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L170",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_excludes_http_500_and_rejoins_after_http_200",
+      "target": "apps_proxy_tests_http_health_origin_set_health_and_wait",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L176",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
+      "target": "apps_proxy_tests_http_health_origin_new",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L209",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
+      "target": "apps_proxy_tests_http_health_origin_addr",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L221",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
+      "target": "apps_proxy_tests_http_health_origin_hold_health",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L228",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
+      "target": "apps_proxy_tests_http_health_backend_statuses",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L232",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
+      "target": "apps_proxy_tests_http_health_assert_probe",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L234",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
+      "target": "apps_proxy_tests_http_health_origin_set_health_and_wait",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L243",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_fetch",
+      "target": "apps_proxy_tests_http_health_get",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L122",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_get",
+      "target": "apps_proxy_tests_http_health_origin_new",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L133",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
+      "target": "apps_proxy_tests_http_health_origin_new",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
+      "target": "apps_proxy_tests_http_health_origin_addr",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L195",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
+      "target": "apps_proxy_tests_http_health_assert_probe",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L197",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
+      "target": "apps_proxy_tests_http_health_backend_statuses",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
       "source": "apps_proxy_tests_http_health_starts_unhealthy_until_each_ready_endpoint_passes_twice",
       "target": "apps_proxy_tests_http_health_origin_new",
       "relation": "calls",
@@ -2570,7 +2788,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L269",
+      "source_location": "L304",
       "weight": 1.0
     },
     {
@@ -2582,7 +2800,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L271",
+      "source_location": "L306",
       "weight": 1.0
     },
     {
@@ -2594,19 +2812,31 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L288",
+      "source_location": "L323",
       "weight": 1.0
     },
     {
       "source": "apps_proxy_tests_http_health_starts_unhealthy_until_each_ready_endpoint_passes_twice",
-      "target": "apps_proxy_tests_http_health_get",
+      "target": "apps_proxy_tests_http_health_backend_statuses",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L293",
+      "source_location": "L327",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_starts_unhealthy_until_each_ready_endpoint_passes_twice",
+      "target": "apps_proxy_tests_http_health_assert_probe",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L364",
       "weight": 1.0
     },
     {
@@ -2618,7 +2848,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L115",
+      "source_location": "L152",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_countedhealthcheck_check",
+      "target": "crates_proxy_balancer_src_health_healthcheckmode_probe_result",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L155",
       "weight": 1.0
     },
     {
@@ -2630,7 +2872,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L116",
+      "source_location": "L157",
       "weight": 1.0
     },
     {
@@ -2642,7 +2884,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L116",
+      "source_location": "L157",
       "weight": 1.0
     },
     {
@@ -2654,7 +2896,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L119",
+      "source_location": "L159",
       "weight": 1.0
     },
     {
@@ -2666,7 +2908,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L125",
+      "source_location": "L164",
       "weight": 1.0
     },
     {
@@ -2678,7 +2920,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L56",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -2690,7 +2932,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L40",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -2702,7 +2944,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L187",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -2714,7 +2956,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L90",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -2726,7 +2968,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L99",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -2738,7 +2980,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L97",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -2750,7 +2992,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L89",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -2762,7 +3004,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -2774,7 +3016,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L115",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -2786,7 +3028,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -2798,7 +3040,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L59",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -2810,7 +3052,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L144",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -2822,7 +3064,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L146",
+      "source_location": "L149",
       "weight": 1.0
     },
     {
@@ -2834,7 +3076,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L35",
+      "source_location": "L51",
       "weight": 1.0
     },
     {
@@ -2846,7 +3088,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L103",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -2858,7 +3100,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L74",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -2870,7 +3112,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L119",
+      "source_location": "L136",
       "weight": 1.0
     },
     {
@@ -2882,7 +3124,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L39",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -3002,7 +3244,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -3014,7 +3256,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -3026,7 +3268,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L25",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -3038,7 +3280,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -3054,6 +3296,42 @@
       "weight": 1.0
     },
     {
+      "source": "crates_proxy_balancer_src_health_completedprobe",
+      "target": "crates_proxy_balancer_src_health_rs_systemtime",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_completedprobe",
+      "target": "crates_proxy_balancer_src_health_proberesult",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_countedhealthcheck",
+      "target": "crates_proxy_balancer_src_health_healthcheckmode",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L144",
+      "weight": 1.0
+    },
+    {
       "source": "crates_proxy_balancer_src_health_countedhealthcheck",
       "target": "crates_proxy_balancer_src_health_rs_box",
       "relation": "references",
@@ -3062,7 +3340,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L108",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -3074,7 +3352,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L109",
+      "source_location": "L146",
       "weight": 1.0
     },
     {
@@ -3086,7 +3364,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L139",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -3098,7 +3376,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L140",
+      "source_location": "L179",
       "weight": 1.0
     },
     {
@@ -3110,7 +3388,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L29",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -3122,7 +3400,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L66",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -3134,7 +3412,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L86",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -3150,6 +3428,18 @@
       "weight": 1.0
     },
     {
+      "source": "crates_proxy_balancer_src_lib_backendstatus",
+      "target": "crates_proxy_balancer_src_lib_rs_option",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "crates/proxy-balancer/src/lib.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
       "source": "crates_proxy_balancer_src_lib_roundrobinpool",
       "target": "crates_proxy_balancer_src_lib_rs_box",
       "relation": "references",
@@ -3158,7 +3448,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L23",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -3170,7 +3460,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -3182,7 +3472,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -3194,7 +3484,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L28",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -3206,7 +3496,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -3218,7 +3508,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -3230,7 +3520,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -3242,7 +3532,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -3366,6 +3656,18 @@
       "weight": 1.0
     },
     {
+      "source": "apps_proxy_tests_http_health_backend_statuses",
+      "target": "apps_proxy_tests_http_health_rs_value",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "generic_arg",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
       "source": "apps_proxy_tests_http_health_healthreply",
       "target": "request",
       "relation": "references",
@@ -3374,7 +3676,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -3386,7 +3688,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L22",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -3398,7 +3700,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -3410,7 +3712,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -3422,7 +3724,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -3434,7 +3736,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L26",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -3446,7 +3748,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L105",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
@@ -3458,7 +3760,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L108",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -3470,7 +3772,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L108",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -3482,7 +3784,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L109",
+      "source_location": "L146",
       "weight": 1.0
     },
     {
@@ -3494,7 +3796,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -3506,7 +3808,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -3518,7 +3820,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -3530,7 +3832,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -3542,7 +3844,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -3554,7 +3856,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L36",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -3566,7 +3868,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L139",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -3578,7 +3880,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L139",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -3590,7 +3892,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L146",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -3602,7 +3904,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L146",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -3614,7 +3916,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L25",
+      "source_location": "L39",
       "weight": 1.0
     },
     {
@@ -3626,7 +3928,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L27",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -3638,7 +3940,19 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L29",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_probestate",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "generic_arg",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -3650,7 +3964,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L66",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -3662,7 +3976,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L66",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -3674,7 +3988,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L86",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -3686,7 +4000,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L86",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -3698,7 +4012,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L86",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -3710,7 +4024,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L102",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -3722,7 +4036,19 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L89",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_lib_backendstatus",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "generic_arg",
+      "source_file": "crates/proxy-balancer/src/lib.rs",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -3734,7 +4060,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L23",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -3746,7 +4072,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -3758,7 +4084,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -3770,7 +4096,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -3782,7 +4108,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L102",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -3794,7 +4120,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L102",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -3806,7 +4132,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L96",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -3818,7 +4144,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L96",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -3830,7 +4156,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L114",
+      "source_location": "L117",
       "weight": 1.0
     },
     {
@@ -3842,7 +4168,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L119",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -3854,7 +4180,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -3866,7 +4192,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -3878,7 +4204,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L124",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -3890,7 +4216,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L109",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -3902,7 +4228,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L109",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -4027,18 +4353,6 @@
     },
     {
       "source": "crates_proxy_http_src_lib",
-      "target": "crates_proxy_balancer_src_lib_roundrobinpool",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L13",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib",
       "target": "crates_proxy_security_src_lib_ipaccesspolicy",
       "relation": "imports_from",
       "_origin": "ast",
@@ -4046,7 +4360,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0
     },
     {
@@ -4122,6 +4436,54 @@
       "weight": 1.0
     },
     {
+      "source": "apps_proxy_tests_http_health_assert_probe",
+      "target": "apps_proxy_tests_http_health_rs_option",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_assert_probe",
+      "target": "apps_proxy_tests_http_health_rs_systemtime",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_assert_probe",
+      "target": "apps_proxy_tests_http_health_rs_value",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health_backend_statuses",
+      "target": "apps_proxy_tests_http_health_rs_socketaddr",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
       "source": "apps_proxy_tests_http_health_fetch",
       "target": "apps_proxy_tests_http_health_rs_socketaddr",
       "relation": "references",
@@ -4130,7 +4492,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L119",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -4142,7 +4504,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L123",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -4166,7 +4528,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L132",
+      "source_location": "L171",
       "weight": 1.0
     },
     {
@@ -4178,7 +4540,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L114",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -4190,7 +4552,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L128",
+      "source_location": "L167",
       "weight": 1.0
     },
     {
@@ -4202,7 +4564,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -4214,7 +4576,19 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_healthcheckmode_probe_result",
+      "target": "crates_proxy_balancer_src_health_rs_result",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -4226,7 +4600,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L180",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -4238,7 +4612,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L146",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -4250,7 +4624,19 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L146",
+      "source_location": "L185",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_probestate_observe",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -4262,7 +4648,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L70",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -4274,7 +4660,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L102",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -4286,7 +4672,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L89",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -4298,7 +4684,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -4310,7 +4696,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -4322,7 +4708,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -4334,7 +4720,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -4346,7 +4732,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -4358,7 +4744,19 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L45",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_probe_json",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -4370,7 +4768,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L124",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -4382,7 +4780,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L124",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -4394,7 +4792,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L124",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -4406,7 +4804,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L42",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
@@ -4418,7 +4816,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L34",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -4430,7 +4828,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L91",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -4442,7 +4840,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L91",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -4454,7 +4852,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L54",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -4466,7 +4864,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L109",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -4478,7 +4876,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L109",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -4490,7 +4888,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L38",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -4502,7 +4900,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L49",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -4542,6 +4940,18 @@
       "weight": 1.0
     },
     {
+      "source": "apps_proxy_tests_http_health_backend_statuses",
+      "target": "apps_proxy_tests_http_health_rs_vec",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
       "source": "apps_proxy_tests_http_health_fetch",
       "target": "apps_proxy_tests_http_health_rs_string",
       "relation": "references",
@@ -4550,7 +4960,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L119",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -4562,7 +4972,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L123",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -4574,7 +4984,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L81",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -4586,7 +4996,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L105",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
@@ -4598,7 +5008,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L30",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -4634,7 +5044,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L132",
+      "source_location": "L171",
       "weight": 1.0
     },
     {
@@ -4646,7 +5056,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L114",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -4658,7 +5068,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -4670,7 +5080,19 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L36",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_healthcheckmode_probe_result",
+      "target": "crates_proxy_balancer_src_health_proberesult",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -4682,7 +5104,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L180",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -4694,7 +5116,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L146",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -4706,7 +5128,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L102",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -4718,7 +5140,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L102",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -4730,7 +5152,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L96",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -4742,7 +5164,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L88",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -4754,7 +5176,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -4766,7 +5188,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L114",
+      "source_location": "L117",
       "weight": 1.0
     },
     {
@@ -4778,7 +5200,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L119",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -4790,7 +5212,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -4802,7 +5224,19 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L45",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_probe_json",
+      "target": "crates_proxy_http_src_lib_rs_value",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "return_type",
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -4814,7 +5248,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L124",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -4826,7 +5260,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L42",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
@@ -4838,7 +5272,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L34",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -4850,7 +5284,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L87",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -4862,7 +5296,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L91",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -4874,7 +5308,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L54",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -4886,7 +5320,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L109",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -4898,7 +5332,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L38",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -4910,7 +5344,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L49",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -5054,7 +5488,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L119",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -5065,7 +5499,29 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L123",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health",
+      "target": "apps_proxy_tests_http_health_backend_statuses",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "apps_proxy_tests_http_health",
+      "target": "apps_proxy_tests_http_health_assert_probe",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/proxy/tests/http_health.rs",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -5076,7 +5532,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L139",
+      "source_location": "L165",
       "weight": 1.0
     },
     {
@@ -5087,7 +5543,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L16",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -5098,7 +5554,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L165",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -5109,7 +5565,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L175",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -5120,7 +5576,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -5131,7 +5587,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L216",
+      "source_location": "L251",
       "weight": 1.0
     },
     {
@@ -5142,7 +5598,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L268",
+      "source_location": "L303",
       "weight": 1.0
     },
     {
@@ -5153,7 +5609,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L339",
+      "source_location": "L381",
       "weight": 1.0
     },
     {
@@ -5164,7 +5620,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L348",
+      "source_location": "L390",
       "weight": 1.0
     },
     {
@@ -5191,24 +5647,24 @@
     },
     {
       "source": "crates_proxy_balancer_src_health",
+      "target": "crates_proxy_balancer_src_health_probestreaks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L122",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health",
       "target": "crates_proxy_balancer_src_health_countedhealthcheck",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L107",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_balancer_src_health",
-      "target": "crates_proxy_balancer_src_health_httpendpointchecks",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L138",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
@@ -5224,13 +5680,46 @@
     },
     {
       "source": "crates_proxy_balancer_src_health",
+      "target": "crates_proxy_balancer_src_health_httpendpointchecks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L177",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health",
+      "target": "crates_proxy_balancer_src_health_proberesult",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health",
       "target": "crates_proxy_balancer_src_health_httphealthoptions",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L24",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -5241,29 +5730,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L63",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_balancer_src_health",
-      "target": "crates_proxy_balancer_src_health_probestreaks",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L86",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_balancer_src_lib",
-      "target": "crates_proxy_balancer_src_lib_selects_only_backends_that_pass_tcp_probes",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L139",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -5279,13 +5746,24 @@
     },
     {
       "source": "crates_proxy_balancer_src_lib",
+      "target": "crates_proxy_balancer_src_lib_selects_only_backends_that_pass_tcp_probes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-balancer/src/lib.rs",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_lib",
       "target": "crates_proxy_balancer_src_lib_roundrobinpool",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -5296,7 +5774,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -5307,7 +5785,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L28",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib",
+      "target": "crates_proxy_http_src_lib_probe_json",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -5472,7 +5961,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L100",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -5483,7 +5972,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L108",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -5494,7 +5983,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L124",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -5516,7 +6005,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L112",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -5538,7 +6027,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L113",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -5549,7 +6038,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L33",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -5560,7 +6049,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L179",
+      "source_location": "L218",
       "weight": 1.0
     },
     {
@@ -5571,7 +6060,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L84",
+      "source_location": "L101",
       "weight": 1.0
     },
     {
@@ -5582,7 +6071,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L105",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
@@ -5593,7 +6082,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L113",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -5604,7 +6093,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L30",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -5615,7 +6104,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L81",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -5626,7 +6115,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L85",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -5648,7 +6137,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L114",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -5659,7 +6148,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L124",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -5670,7 +6159,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L128",
+      "source_location": "L167",
       "weight": 1.0
     },
     {
@@ -5681,7 +6170,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L132",
+      "source_location": "L171",
       "weight": 1.0
     },
     {
@@ -5692,7 +6181,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L36",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_healthcheckmode",
+      "target": "crates_proxy_balancer_src_health_healthcheckmode_probe_result",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -5703,7 +6203,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L46",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -5714,7 +6214,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L146",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
@@ -5725,7 +6225,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L180",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -5736,23 +6236,12 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L195",
+      "source_location": "L234",
       "weight": 1.0
     },
     {
       "source": "crates_proxy_balancer_src_health_probestate",
       "target": "crates_proxy_balancer_src_health_probestate_observe",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L70",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_balancer_src_health_probestreaks",
-      "target": "crates_proxy_balancer_src_health_probestreaks_for_target",
       "relation": "method",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -5769,7 +6258,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/health.rs",
-      "source_location": "L89",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_probestreaks",
+      "target": "crates_proxy_balancer_src_health_probestreaks_for_target",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-balancer/src/health.rs",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -5780,7 +6280,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L102",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -5791,7 +6291,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L114",
+      "source_location": "L117",
       "weight": 1.0
     },
     {
@@ -5802,7 +6302,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L119",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -5813,7 +6313,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -5824,7 +6324,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -5835,7 +6335,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -5846,7 +6346,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L88",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -5857,84 +6357,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-balancer/src/lib.rs",
-      "source_location": "L96",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib_reverseproxy",
-      "target": "crates_proxy_http_src_lib_reverseproxy_upstream_peer",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L109",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib_reverseproxy",
-      "target": "crates_proxy_http_src_lib_reverseproxy_fail_to_connect",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L124",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib_reverseproxy",
-      "target": "crates_proxy_http_src_lib_reverseproxy_new",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L34",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib_reverseproxy",
-      "target": "crates_proxy_http_src_lib_reverseproxy_with_backends",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L38",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib_reverseproxy",
-      "target": "crates_proxy_http_src_lib_reverseproxy_from_pool",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L42",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib_reverseproxy",
-      "target": "crates_proxy_http_src_lib_reverseproxy_with_ip_policy",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L49",
-      "weight": 1.0
-    },
-    {
-      "source": "crates_proxy_http_src_lib_reverseproxy",
-      "target": "crates_proxy_http_src_lib_reverseproxy_respond_status",
-      "relation": "method",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L54",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -5945,7 +6368,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L87",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -5956,7 +6379,84 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "crates/proxy-http/src/lib.rs",
-      "source_location": "L91",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_reverseproxy",
+      "target": "crates_proxy_http_src_lib_reverseproxy_upstream_peer",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_reverseproxy",
+      "target": "crates_proxy_http_src_lib_reverseproxy_fail_to_connect",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L141",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_reverseproxy",
+      "target": "crates_proxy_http_src_lib_reverseproxy_new",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_reverseproxy",
+      "target": "crates_proxy_http_src_lib_reverseproxy_with_backends",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_reverseproxy",
+      "target": "crates_proxy_http_src_lib_reverseproxy_from_pool",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_reverseproxy",
+      "target": "crates_proxy_http_src_lib_reverseproxy_with_ip_policy",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_reverseproxy",
+      "target": "crates_proxy_http_src_lib_reverseproxy_respond_status",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/proxy-http/src/lib.rs",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -6033,7 +6533,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L126",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -6044,7 +6544,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L126",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -6140,7 +6640,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L365",
+      "source_location": "L407",
       "weight": 1.0
     },
     {
@@ -6152,7 +6652,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L233",
+      "source_location": "L268",
       "weight": 1.0
     },
     {
@@ -6164,7 +6664,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L341",
+      "source_location": "L383",
       "weight": 1.0
     },
     {
@@ -6176,7 +6676,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L142",
+      "source_location": "L168",
       "weight": 1.0
     },
     {
@@ -6188,7 +6688,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L188",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
@@ -6200,7 +6700,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L168",
+      "source_location": "L195",
       "weight": 1.0
     },
     {
@@ -6212,7 +6712,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "apps/proxy/tests/http_health.rs",
-      "source_location": "L288",
+      "source_location": "L323",
       "weight": 1.0
     },
     {
@@ -6267,7 +6767,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L126",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -6278,7 +6778,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L126",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -6290,6 +6790,28 @@
       "confidence_score": 1.0,
       "source_file": "AGENTS.md",
       "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_countedhealthcheck",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture.md",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_balancer_src_health_probestreaks",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture.md",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -6371,6 +6893,17 @@
     },
     {
       "source": "docs_development_pengujian_kesiapan",
+      "target": "docs_development_pengujian_last_probe",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/development.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_development_pengujian_kesiapan",
       "target": "readme_rentetan_probe",
       "relation": "references",
       "_origin": "semantic",
@@ -6392,6 +6925,17 @@
       "weight": 1.0
     },
     {
+      "source": "docs_development_pengujian_last_probe",
+      "target": "readme_last_probe",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/development.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
       "source": "readme_aturan_ip",
       "target": "crates_proxy_security_src_lib_ipaccesspolicy",
       "relation": "references",
@@ -6400,6 +6944,39 @@
       "confidence_score": 1.0,
       "source_file": "docs/architecture.md",
       "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_last_probe",
+      "target": "readme_hasil_probe",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_last_probe",
+      "target": "crates_proxy_balancer_src_health_completedprobe",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture.md",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_last_probe",
+      "target": "crates_proxy_balancer_src_lib_roundrobinpool_backend_probe_statuses",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/architecture.md",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -6421,7 +6998,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L110",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -6536,6 +7113,17 @@
     },
     {
       "source": "readme_status_backend",
+      "target": "readme_aturan_ip",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_status_backend",
       "target": "readme_round_robin",
       "relation": "references",
       "_origin": "semantic",
@@ -6558,13 +7146,13 @@
     },
     {
       "source": "readme_status_backend",
-      "target": "readme_aturan_ip",
+      "target": "readme_last_probe",
       "relation": "references",
       "_origin": "semantic",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L98",
+      "source_location": "L87",
       "weight": 1.0
     },
     {
@@ -6577,17 +7165,84 @@
       "source_file": "docs/architecture.md",
       "source_location": "L19",
       "weight": 1.0
+    },
+    {
+      "source": "crates_proxy_http_src_lib_probe_json",
+      "target": "readme_last_probe",
+      "relation": "implements",
+      "_origin": "semantic",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/architecture.md",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_development_pengujian_last_probe",
+      "target": "apps_proxy_tests_http_health_assert_probe",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/development.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_development_pengujian_last_probe",
+      "target": "apps_proxy_tests_http_health_excludes_timed_out_ready_endpoint_and_rejoins_after_recovery",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/development.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_development_pengujian_last_probe",
+      "target": "apps_proxy_tests_http_health_returns_502_when_neither_health_endpoint_returns_200_at_startup",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/development.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_development_pengujian_last_probe",
+      "target": "apps_proxy_tests_http_health_starts_unhealthy_until_each_ready_endpoint_passes_twice",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "docs/development.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_hasil_probe",
+      "target": "crates_proxy_balancer_src_health_proberesult",
+      "relation": "references",
+      "_origin": "semantic",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "README.md",
+      "source_location": "L89",
+      "weight": 1.0
     }
   ],
   "hyperedges": [
     {
       "id": "docs_architecture_publikasi_kesiapan_backend",
-      "label": "Pembacaan kesiapan dan penghitung untuk status backend",
+      "label": "Pembacaan kesiapan, penghitung dan probe terakhir untuk status backend",
       "nodes": [
         "readme_status_backend",
         "readme_round_robin",
         "readme_rentetan_probe",
-        "crates_proxy_balancer_src_lib_roundrobinpool_backend_probe_statuses"
+        "crates_proxy_balancer_src_lib_roundrobinpool_backend_probe_statuses",
+        "readme_last_probe"
       ],
       "relation": "participate_in",
       "confidence": "EXTRACTED",
@@ -6596,5 +7251,5 @@
       "_origin": "semantic"
     }
   ],
-  "built_at_commit": "c11f9614b2f4058798381a788040b963776f35d8"
+  "built_at_commit": "81e7765c81a6bc51afd4d7e8e754987f6a6695ad"
 }

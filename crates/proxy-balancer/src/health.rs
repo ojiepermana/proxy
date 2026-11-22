@@ -3,7 +3,7 @@ use std::{
     num::{NonZeroU32, NonZeroUsize},
     str::FromStr,
     sync::{Arc, Mutex, MutexGuard, Weak},
-    time::Duration,
+    time::{Duration, SystemTime},
 };
 
 use async_trait::async_trait;
@@ -17,6 +17,20 @@ use pingora::{Error, ErrorType, Result, protocols::l4::socket::SocketAddr};
 pub enum HealthCheckMode {
     Tcp,
     Http,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ProbeResult {
+    HttpStatus(u16),
+    TcpConnected,
+    Timeout,
+    Error,
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct CompletedProbe {
+    pub completed_at: SystemTime,
+    pub result: ProbeResult,
 }
 
 /// Opsi eksplisit untuk probe HTTP. Nilai kosong mempertahankan pengaturan bawaan.
@@ -43,6 +57,23 @@ impl FromStr for HealthCheckMode {
 }
 
 impl HealthCheckMode {
+    fn probe_result(self, result: &Result<()>) -> ProbeResult {
+        match result {
+            Ok(()) => match self {
+                Self::Tcp => ProbeResult::TcpConnected,
+                Self::Http => ProbeResult::HttpStatus(200),
+            },
+            Err(error) => match error.etype() {
+                // Validator bawaan HttpHealthCheck mengembalikan kode respons dalam varian ini.
+                ErrorType::CustomCode("non 200 code", status) => ProbeResult::HttpStatus(*status),
+                ErrorType::ConnectTimedout | ErrorType::ReadTimedout | ErrorType::WriteTimedout => {
+                    ProbeResult::Timeout
+                }
+                _ => ProbeResult::Error,
+            },
+        }
+    }
+
     pub(crate) fn build(
         self,
         view: &Arc<Backends>,
@@ -63,12 +94,17 @@ impl HealthCheckMode {
 pub(super) struct ProbeState {
     pub(super) consecutive_successes: usize,
     pub(super) consecutive_failures: usize,
+    pub(super) last_probe: Option<CompletedProbe>,
     startup: Option<Weak<Backends>>,
 }
 
 impl ProbeState {
-    fn observe(&mut self, target: &Backend, success: bool, success_threshold: usize) {
-        if success {
+    fn observe(&mut self, target: &Backend, probe: CompletedProbe, success_threshold: usize) {
+        self.last_probe = Some(probe);
+        if matches!(
+            probe.result,
+            ProbeResult::TcpConnected | ProbeResult::HttpStatus(200)
+        ) {
             self.consecutive_successes = self.consecutive_successes.saturating_add(1);
             self.consecutive_failures = 0;
             if self.consecutive_successes == success_threshold
@@ -105,6 +141,7 @@ impl ProbeStreaks {
 }
 
 pub(super) struct CountedHealthCheck {
+    pub(super) mode: HealthCheckMode,
     pub(super) inner: Box<dyn HealthCheck + Send + Sync>,
     pub(super) streaks: Arc<ProbeStreaks>,
 }
@@ -113,11 +150,13 @@ pub(super) struct CountedHealthCheck {
 impl HealthCheck for CountedHealthCheck {
     async fn check(&self, target: &Backend) -> Result<()> {
         let result = self.inner.check(target).await;
-        self.streaks.for_target(target).observe(
-            target,
-            result.is_ok(),
-            self.health_threshold(true),
-        );
+        let probe = CompletedProbe {
+            completed_at: SystemTime::now(),
+            result: self.mode.probe_result(&result),
+        };
+        self.streaks
+            .for_target(target)
+            .observe(target, probe, self.health_threshold(true));
         result
     }
 
